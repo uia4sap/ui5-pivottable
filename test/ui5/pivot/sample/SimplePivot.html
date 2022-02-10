@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Test Page - Pivot Table</title>
+    <base href="../../../../">
+    <!--[if lte IE 9]><script>
+    (function() {
+        var baseTag = document.getElementsByTagName('base')[0];
+        baseTag.href = baseTag.href;
+    })();
+    </script><![endif]-->
+    
+    <script id="sap-ui-bootstrap"
+		src="resources/sap-ui-core.js"
+		data-sap-ui-async="true"
+		data-sap-ui-libs="sap.m,ui5.pivot"
+        data-sap-ui-xx-bindingSyntax="complex"
+		data-sap-ui-theme="sap_belize">
+	</script>
+
+<script>
+        sap.ui.getCore().attachInit(function () {
+            var table = new ui5.pivot.PivotTable();
+            table.setRows([ "site" ]);
+            table.setCols([ "soft" ]);
+            table.addAggregator(new ui5.pivot.Aggregator( {
+                key: ui5.pivot.AggregatorType.Count
+            }));
+            table.addAggregator(new ui5.pivot.Aggregator( {
+                key: ui5.pivot.AggregatorType.CountAsFractionOfTotal
+            }));
+            table.addAggregator(new ui5.pivot.Aggregator( {
+                key: ui5.pivot.AggregatorType.CountAsFractionOfRows
+            }));
+            table.addAggregator(new ui5.pivot.Aggregator( {
+                key: ui5.pivot.AggregatorType.CountAsFractionOfColumns
+            }));
+            var button1 = new sap.m.Button();
+            button1.attachPress(function() {
+                table.load([{
+                    "site": 1,
+                    "soft": 4,
+                    "hard": 4
+                },{
+                    "site": 2,
+                    "soft": 4,
+                    "hard": 4
+                },{
+                    "site": 2,
+                    "soft": 4,
+                    "hard": 4
+                },{
+                    "site": 1,
+                    "soft": 5,
+                    "hard": 5
+                },{
+                    "site": 1,
+                    "soft": 9,
+                    "hard": 9
+                },{
+                    "site": 1,
+                    "soft": 4,
+                    "hard": 4
+                }]);
+            })
+
+            var oBox = new sap.m.VBox({});
+			oBox.addItem(button1);
+			oBox.addItem(table);
+            oBox.placeAt("content");
+        });
+    </script>
+</head>
+<body id="content" class="sapUiBody">
+</body>
+</html>

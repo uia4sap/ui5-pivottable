@@ -1,0 +1,40 @@
+{
+    "name": "ui5-pivot",
+    "version": "0.1.0",
+    "description": "Wafer Map controls for OpenUI 5",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/uia4sap/ui5-pivot.git"
+    },
+    "homepage": "https://github.com/uia4sap/ui5-pivot",
+    "ui5lab": {
+        "namespace": "ui5.pivot",
+        "icon": "chart",
+        "displayName": "ui5-pivot"
+    },
+    "license": "Apache-2.0",
+    "private": false,
+    "scripts": {
+        "prepare": "node prepare.js",
+        "start": "ui5 serve --open ./test-resources/ui5lab/browser/index.html",
+        "build": "rimraf dist && ui5 build",
+        "release": "rimraf dist && ui5 build --exclude-task=createDebugFiles",
+        "eslint": "eslint src/ui5/pivot"
+    },
+    "dependencies": {
+        "@openui5/sap.f": "1.58.4",
+        "@openui5/sap.m": "1.58.4",
+        "@openui5/sap.ui.core": "1.58.4",
+        "@openui5/sap.ui.layout": "1.58.4",
+        "@openui5/themelib_sap_belize": "1.58.4",
+        "jquery-ui": "^1.13.0",
+        "pivottable": "2.16.1",
+        "exceljs": "^4.3.0"
+    },
+    "devDependencies": {
+        "@ui5/cli": "^1.14.0",
+        "eslint": "^5.2.0",
+        "fs-extra": "^3.0.0",
+        "ui5lab-browser": "1.0.0"
+    }
+}

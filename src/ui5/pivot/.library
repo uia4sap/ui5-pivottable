@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library xmlns="http://www.sap.com/sap.ui.library.xsd">
+	<name>ui5.pivot</name>
+	<version>${version}</version>
+	<documentation>UI5 ui5.pivot</documentation>
+	<dependencies>
+		<dependency>
+			<libraryName>sap.ui.core</libraryName>
+		</dependency>
+	</dependencies>
+	<appData>
+		<!-- excludes for the JSDoc -->
+		<jsdoc xmlns="http://www.sap.com/ui5/buildext/jsdoc">
+			<exclude name="ui5.pivot.js." />
+		</jsdoc>
+		<!-- excludes for the JSCoverage -->
+		<jscoverage xmlns="http://www.sap.com/ui5/buildext/jscoverage">
+			<exclude name="ui5.pivot.js." />
+		</jscoverage>
+	</appData>
+</library>

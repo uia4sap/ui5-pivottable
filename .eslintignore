@@ -1,0 +1,4 @@
+node_modules
+dist
+test/ui5lab/browser
+src/ui5/pivot/3rdparty

@@ -1,0 +1,12 @@
+specVersion: '1.0'
+metadata:
+  name: ui5-pivot
+type: library
+server:
+  settings:
+    httpPort: 9091
+framework:
+  name: OpenUI5
+  version: "1.58.4"
+  libraries:
+    - name: sap.ui.core

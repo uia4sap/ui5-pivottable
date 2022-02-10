@@ -1,0 +1,5 @@
+dist/
+node_modules/
+src/ui5/pivot/3rdparty/
+test/ui5lab/browser/
+package-lock.json
