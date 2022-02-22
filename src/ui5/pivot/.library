@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <library xmlns="http://www.sap.com/sap.ui.library.xsd">
 	<name>ui5.pivot</name>
-	<version>${version}</version>
+	<version>0.1.0</version>
 	<documentation>UI5 ui5.pivot</documentation>
 	<dependencies>
 		<dependency>

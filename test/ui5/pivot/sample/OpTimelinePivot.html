@@ -1,0 +1,270 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Test Page - Pivot Table</title>
+    <base href="../../../../">
+    <!--[if lte IE 9]><script>
+    (function() {
+        var baseTag = document.getElementsByTagName('base')[0];
+        baseTag.href = baseTag.href;
+    })();
+    </script><![endif]-->
+    
+    <script id="sap-ui-bootstrap"
+		src="resources/sap-ui-core.js"
+		data-sap-ui-async="true"
+		data-sap-ui-libs="sap.m,ui5.pivot"
+        data-sap-ui-xx-bindingSyntax="complex"
+		data-sap-ui-theme="sap_belize">
+	</script>
+
+<script>
+        sap.ui.getCore().attachInit(function () {
+            var table = new ui5.pivot.PivotTable();
+            table.setRows([ "recipe" ]);
+            table.setCols([ "time" ]);
+            table.setValues([ "wafer" ]);
+            table.setHiddenAttributes([ "id" ]);
+            table.setHiddenFromAggregators([ "op", "recipe", "time" ]);
+            table.setHiddenFromDragDrop([ "wafer" ]);
+            table.addAggregator(new ui5.pivot.Aggregator( {
+                key: "Count"
+            }));
+            table.addAggregator(new ui5.pivot.Aggregator( {
+                key: "Sum"
+            }));
+            table.setAggregatorName("Sum");
+            table.addRenderer(new ui5.pivot.Renderer( {
+                key: "Bar Chart"
+            }));
+            table.addRenderer(new ui5.pivot.Renderer( {
+                key: "Line Chart"
+            }));
+            table.setRendererName("Bar Chart");
+            table.setRendererOptions({
+                "plotly": {
+                    width: "500px",
+                    height: "200"
+                }
+            })
+            var button1 = new sap.m.Button();
+            button1.attachPress(function() {
+                table.load([{
+                    "id": 1,
+                    "op": "op1",
+                    "time": 1,
+                    "wafer": 25,
+                    "recipe": "r1"
+                },{
+                    "id": 1,
+                    "op": "op1",
+                    "time": 1,
+                    "wafer": 3,
+                    "recipe": "r1"
+                },{
+                    "id": 1,
+                    "op": "op1",
+                    "time": 1,
+                    "wafer": 25,
+                    "recipe": "r2"
+                },{
+                    "id": 1,
+                    "op": "op1",
+                    "time": 2,
+                    "wafer": 21,
+                    "recipe": "r1"
+                },{
+                    "id": 1,
+                    "op": "op1",
+                    "time": 2,
+                    "wafer": 2,
+                    "recipe": "r1"
+                },{
+                    "id": 1,
+                    "op": "op1",
+                    "time": 3,
+                    "wafer": 25,
+                    "recipe": "r1"
+                },{
+                    "id": 1,
+                    "op": "op1",
+                    "time": 3,
+                    "wafer": 25,
+                    "recipe": "r3"
+                },{
+                    "id": 1,
+                    "op": "op1",
+                    "time": 3,
+                    "wafer": 5,
+                    "recipe": "r3"
+                },{
+                    "id": 1,
+                    "op": "op1",
+                    "time": 3,
+                    "wafer": 15,
+                    "recipe": "r1"
+                },{
+                    "id": 1,
+                    "op": "op1",
+                    "time": 4,
+                    "wafer": 25,
+                    "recipe": "r1"
+                },{
+                    "id": 1,
+                    "op": "op1",
+                    "time": 4,
+                    "wafer": 2,
+                    "recipe": "r1"
+                },{
+                    "id": 1,
+                    "op": "op1",
+                    "time": 4,
+                    "wafer": 2,
+                    "recipe": "r2"
+                },{
+                    "id": 1,
+                    "op": "op1",
+                    "time": 5,
+                    "wafer": 25,
+                    "recipe": "r1"
+                },{
+                    "id": 1,
+                    "op": "op1",
+                    "time": 5,
+                    "wafer": 25,
+                    "recipe": "r4"
+                },{
+                    "id": 1,
+                    "op": "op1",
+                    "time": 5,
+                    "wafer": 23,
+                    "recipe": "r4"
+                },{
+                    "id": 1,
+                    "op": "op1",
+                    "time": 6,
+                    "wafer": 20,
+                    "recipe": "r3"
+                },{
+                    "id": 1,
+                    "op": "op1",
+                    "time": 6,
+                    "wafer": 25,
+                    "recipe": "r1"
+                },{
+                    "id": 1,
+                    "op": "op1",
+                    "time": 7,
+                    "wafer": 25,
+                    "recipe": "r3"
+                },{
+                    "id": 1,
+                    "op": "op1",
+                    "time": 9,
+                    "wafer": 21,
+                    "recipe": "r1"
+                },{
+                    "id": 1,
+                    "op": "op1",
+                    "time": 10,
+                    "wafer": 13,
+                    "recipe": "r1"
+                },{
+                    "id": 1,
+                    "op": "op1",
+                    "time": 10,
+                    "wafer": 12,
+                    "recipe": "r2"
+                },{
+                    "id": 1,
+                    "op": "op1",
+                    "time": 10,
+                    "wafer": 12,
+                    "recipe": "r2"
+                },{
+                    "id": 1,
+                    "op": "op1",
+                    "time": 11,
+                    "wafer": 12,
+                    "recipe": "r1"
+                },{
+                    "id": 1,
+                    "op": "op1",
+                    "time": 11,
+                    "wafer": 25,
+                    "recipe": "r2"
+                },{
+                    "id": 1,
+                    "op": "op1",
+                    "time": 12,
+                    "wafer": 24,
+                    "recipe": "r1"
+                },{
+                    "id": 1,
+                    "op": "op1",
+                    "time": 13,
+                    "wafer": 1,
+                    "recipe": "r1"
+                },{
+                    "op": "op1",
+                    "time": 13,
+                    "wafer": 1,
+                    "recipe": "r1"
+                },{
+                    "id": 1,
+                    "op": "op1",
+                    "time": 13,
+                    "wafer": 25,
+                    "recipe": "r4"
+                },{
+                    "id": 1,
+                    "op": "op1",
+                    "time": 13,
+                    "wafer": 25,
+                    "recipe": "r2"
+                },{
+                    "id": 1,
+                    "op": "op1",
+                    "time": 13,
+                    "wafer": 20,
+                    "recipe": "r1"
+                },{
+                    "id": 1,
+                    "op": "op1",
+                    "time": 13,
+                    "wafer": 12,
+                    "recipe": "r2"
+                },{
+                    "id": 1,
+                    "op": "op1",
+                    "time": 13,
+                    "wafer": 13,
+                    "recipe": "r1"
+                },{
+                    "id": 1,
+                    "op": "op1",
+                    "time": 14,
+                    "wafer": 15,
+                    "recipe": "r1"
+                },{
+                    "id": 1,
+                    "op": "op1",
+                    "time": 14,
+                    "wafer": 25,
+                    "recipe": "r3"
+                }]);
+            })
+
+            var oBox = new sap.m.VBox({});
+			oBox.addItem(button1);
+			oBox.addItem(table);
+            oBox.placeAt("content");
+        });
+    </script>
+</head>
+<body id="content" class="sapUiBody">
+</body>
+</html>

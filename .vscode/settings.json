@@ -3,7 +3,9 @@
         "argb",
         "openui",
         "pivottable",
+        "plotly",
         "rdparty",
-        "themelib"
+        "themelib",
+        "vals"
     ]
 }

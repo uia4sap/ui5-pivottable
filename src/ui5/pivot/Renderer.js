@@ -5,7 +5,7 @@ sap.ui.define([
 ) {
     "use strict";
 
-    return Element.extend("ui5.pivot.Aggregator", {
+    return Element.extend("ui5.pivot.Renderer", {
 
         metadata: {
 
@@ -16,8 +16,6 @@ sap.ui.define([
                 key: { type: "string", group: "data" },
 
                 name: { type: "string", group: "data" },
-
-                plugin: { type: "any", group: "data" }
             }
         }
 

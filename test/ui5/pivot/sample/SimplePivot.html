@@ -27,16 +27,16 @@
             table.setRows([ "site" ]);
             table.setCols([ "soft" ]);
             table.addAggregator(new ui5.pivot.Aggregator( {
-                key: ui5.pivot.AggregatorType.Count
+                key: "Count"
             }));
             table.addAggregator(new ui5.pivot.Aggregator( {
-                key: ui5.pivot.AggregatorType.CountAsFractionOfTotal
+                key: "Count As Fraction Of Total"
             }));
             table.addAggregator(new ui5.pivot.Aggregator( {
-                key: ui5.pivot.AggregatorType.CountAsFractionOfRows
+                key: "Count As Fraction Of Rows"
             }));
             table.addAggregator(new ui5.pivot.Aggregator( {
-                key: ui5.pivot.AggregatorType.CountAsFractionOfColumns
+                key: "Count As Fraction Of Columns"
             }));
             var button1 = new sap.m.Button();
             button1.attachPress(function() {

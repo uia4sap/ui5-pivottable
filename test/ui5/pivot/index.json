@@ -1,0 +1,31 @@
+{
+    "ui5.pivot": {
+        "icon": "sap-icon://chart",
+        "name": "Pivot for UI5",
+        "description": "Pivot for UI5",
+        "source": "https://github.com/uia4sap/ui5-pivotjs",
+        "documentation": "https://github.com/uia4sap/ui5-pivotjs/blob/master/README.md",
+        "demo": "https://github.com/uia4sap/ui5-chartjs/index.html",
+        "license": "Apache 2.0",
+        "version": "1.0.0",
+        "content": {
+            "Pivot": {
+                "id": "Pivot",
+                "name": "Pivot",
+                "type": "control",
+                "description": "Samples of the Pivottable",
+                "samples": [{
+                        "id": "SimplePivot",
+                        "name": "The simplest",
+                        "description": "the simplest pivot"
+                    },
+                    {
+                        "id": "OpTimelinePivot",
+                        "name": "The timeline",
+                        "description": "the operation timeline"
+                    }
+                ]
+            }
+        }
+    }
+}

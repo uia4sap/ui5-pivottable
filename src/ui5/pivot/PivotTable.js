@@ -1,16 +1,15 @@
 sap.ui.define([
+    'jquery.sap.global',
     "sap/ui/core/Control",
     "sap/ui/core/Element",
-    "./3rdparty/jquery-ui/jquery-ui",
-    "./3rdparty/pivottable/pivot"
+    "./library"
 ], function(
+    jQuery,
     Control,
     Element,
-    jQueryUI,
-    Pivot
+    library
 ) {
     "use strict";
-
 
     /**
      *
@@ -44,18 +43,30 @@ sap.ui.define([
 
                 values: { type: "string[]", group: "data", defaultValue: [] },
 
+                hiddenAttributes: { type: "string[]", group: "data", defaultValue: [] },
+
+                hiddenFromAggregators: { type: "string[]", group: "data", defaultValue: [] },
+                
+                hiddenFromDragDrop: { type: "string[]", group: "data", defaultValue: [] },
+
                 aggregatorName: { type: "string", group: "data", defaultValue: "Count" },
 
                 rendererName: { type: "string", group: "data", defaultValue: "Table" },
+
+                rendererOptions: { type: "any", group: "data", defaultValue: "Table" }
             },
             
-            defaultAggregation: "aggregators",
-
             aggregations: {
                 aggregators: {
                     type: "ui5.pivot.Aggregator",
                     multiple: true,
                     singularName: "aggregator"
+                },
+
+                renderers: {
+                    type: "ui5.pivot.Renderer",
+                    multiple: true,
+                    singularName: "renderer"
                 },
             },
 
@@ -79,43 +90,66 @@ sap.ui.define([
 
         load: function(data) {
             // aggregators
-            var defaults = jQuery.pivotUtilities.aggregators;
-            var selected = this.getAggregators();
+            var dags = jQuery.pivotUtilities.aggregators;
+            var ags = this.getAggregators();
             var aggregators = {};
-            if (selected.length > 0) {
-                selected.forEach(function(s) {
-                    var key = s.getKey();
-                    var ag = defaults[key];
+            if (ags.length > 0) {
+                ags.forEach(function(e) {
+                    var key = e.getKey();
+                    var ag = dags[key];
                     if (ag) {
                         aggregators[key] = ag;
                     }
                 });
             } else {
-                aggregators = defaults;
+                aggregators = dags;
             }
 
-            defaults = jQuery.pivotUtilities.renderers;
-
+            // var drs = jQuery.pivotUtilities.renderers;
+            var drs = jQuery.extend(
+                jQuery.pivotUtilities.renderers,
+                jQuery.pivotUtilities.plotly_renderers);
+            var rs = this.getRenderers();
+            var renderers = {};
+            if (rs.length > 0) {
+                rs.forEach(function(e) {
+                    var key = e.getKey();
+                    var r = drs[key];
+                    if (r) {
+                        renderers[key] = r;
+                    }
+                });
+            } else {
+                renderers = drs;
+            }
 
             var div = jQuery("#" + this.getId());
             var toExcel = this.toExcel;
+            var rendererOptions = this.getRendererOptions() || {};
+            rendererOptions = Object.assign({}, rendererOptions);
+            rendererOptions["table"] = {
+                clickCallback: function(e, value, filters, pivotData) {
+                    toExcel(pivotData);
+                }
+            };
             this.__pivot = div.pivotUI(data, {
                 rows: this.getRows(),
                 cols: this.getCols(),
+                vals: this.getValues(),
+                hiddenAttributes: this.getHiddenAttributes(),
+                hiddenFromAggregators: this.getHiddenFromAggregators(),
+                hiddenFromDragDrop: this.getHiddenFromDragDrop(),
                 aggregators: aggregators,
+                renderers: renderers,
                 aggregatorName: this.getAggregatorName(),
-                rendererOptions: {
-                    table: {
-                        clickCallback: function(e, value, filters, pivotData) {
-                            toExcel(pivotData);
-                        }
-                    }
-                }
+                rendererName: this.getRendererName(),
+                rendererOptions: rendererOptions
             });
         },
 
         toExcel: function(pivotData, opts) {
             var result = [];
+
             var rowAttrs = pivotData.rowAttrs;
             var colAttrs = pivotData.colAttrs;
             var rowKeys = pivotData.getRowKeys();
@@ -193,7 +227,6 @@ sap.ui.define([
                 link.download = "report.xlsx";
                 link.click();
             });
-
 
             return result;
         }
