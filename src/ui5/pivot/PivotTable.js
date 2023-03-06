@@ -37,6 +37,8 @@ sap.ui.define([
 
             properties: {
 
+                data: { type: "any", group: "data", defaultValue: [] },
+
                 rows: { type: "string[]", group: "data", defaultValue: [] },
 
                 cols: { type: "string[]", group: "data", defaultValue: [] },
@@ -46,7 +48,7 @@ sap.ui.define([
                 hiddenAttributes: { type: "string[]", group: "data", defaultValue: [] },
 
                 hiddenFromAggregators: { type: "string[]", group: "data", defaultValue: [] },
-                
+
                 hiddenFromDragDrop: { type: "string[]", group: "data", defaultValue: [] },
 
                 aggregatorName: { type: "string", group: "data", defaultValue: "Count" },
@@ -55,7 +57,7 @@ sap.ui.define([
 
                 rendererOptions: { type: "any", group: "data", defaultValue: "Table" }
             },
-            
+
             aggregations: {
                 aggregators: {
                     type: "ui5.pivot.Aggregator",
@@ -71,7 +73,7 @@ sap.ui.define([
             },
 
             events: {
-                
+
             }
         },
 
@@ -81,11 +83,15 @@ sap.ui.define([
 
         onBeforeRendering: function() {},
 
-        onAfterRendering: function() {
-        },
+        onAfterRendering: function() {},
 
         pivot: function() {
             return this.__pivot;
+        },
+
+        setData: function(data) {
+            this.load(data);
+            this.setProperty("data", data, true);
         },
 
         load: function(data) {
@@ -147,75 +153,140 @@ sap.ui.define([
             });
         },
 
-        toExcel: function(pivotData, opts) {
+        toExcel: function(pivotData) {
             var result = [];
 
             var rowAttrs = pivotData.rowAttrs;
             var colAttrs = pivotData.colAttrs;
+            var rowTotals = pivotData.rowTotals;
+            var colTotals = pivotData.colTotals;
             var rowKeys = pivotData.getRowKeys();
             var colKeys = pivotData.getColKeys();
 
-            for (var x = 0; x < colAttrs.length; x++) {
+            if (colAttrs.length == 0) {
                 var head = [].concat(rowAttrs);
-                head.push(colAttrs[x]);
-                for (var y = 0; y < colKeys.length; y++) {
-                    head.push(colKeys[y][x]);
-                } 
+                head.push('');
+                head.push("Totals");
                 result.push(head);
+            } else {
+                for (var x = 0; x < colAttrs.length; x++) {
+                    var head = [].concat(rowAttrs);
+                    head.push(colAttrs[x]);
+                    for (var y = 0; y < colKeys.length; y++) {
+                        head.push(colKeys[y][x]);
+                    }
+                    head.push("Totals");
+                    result.push(head);
+                }
             }
 
             for (var r = 0; r < rowKeys.length; r++) {
-                var rowKey = rowKeys[r]; 
-
-                var row =[].concat(rowKey);
+                var rowKey = rowKeys[r]; // array
+                var row = [].concat(rowKey);
                 row.push('');
                 for (var c = 0; c < colKeys.length; c++) {
-                    var colKey = colKeys[c];
+                    var colKey = colKeys[c]; // array
                     var agg = pivotData.getAggregator(rowKey, colKey);
-                    var v = agg.value(); 
+                    var v = agg.value();
                     if (v != null) {
                         var fv = agg.format(v)
-                        row.push(fv);
+                        row.push(parseFloat(fv));
                     } else {
                         row.push("");
                     }
                 }
+
+                // row total
+                var key = rowKey[0];
+                for (var k = 1; k < rowKey.length; k++) {
+                    key += "\u0000" + rowKey[k];
+                }
+                var rt = rowTotals[key];
+                var rtv = rt.format(rt.value());
+                row.push(isNaN(rtv) ? rtv : parseFloat(rtv));
                 result.push(row);
             }
+
+            // col total
+            var foot = ["Totals"];
+            for (var r = 0; r < rowAttrs.length; r++) {
+                foot.push('');
+            }
+            for (var c = 0; c < colKeys.length; c++) {
+                var colKey = colKeys[c]; // array
+                var key = colKey[0];
+                for (var k = 1; k < colKey.length; k++) {
+                    key += "\u0000" + colKey[k];
+                }
+                var ct = colTotals[key];
+                var ctv = ct.format(ct.value());
+                foot.push(isNaN(ctv) ? ctv : parseFloat(ctv));
+            }
+            var at = pivotData.allTotal;
+            var atv = at.format(at.value());
+            foot.push(isNaN(atv) ? atv : parseFloat(atv));
+            result.push(foot);
 
             // sheet
             var workbook = new ExcelJS.Workbook();
             var sheet = workbook.addWorksheet("result");
-            for(var x = 0; x<result.length; x++) {
-                sheet.addRow(result[x]); 
-                sheet.getRow(x + 1).alignment = { 
-                    vertical: 'middle', 
-                    horizontal: 'left' 
+
+            // data
+            for (var x = 0; x < result.length; x++) {
+                sheet.addRow(result[x]);
+                sheet.getRow(x + 1).alignment = {
+                    vertical: 'middle',
+                    horizontal: 'right'
                 };
-                sheet.getRow(x + 1).border = {
-                    top: { style: 'thin' },
-                    left: { style:'thin' },
-                    bottom: { style: 'thin' },
-                    right: { style: 'thin'}
-                };            
             }
-            sheet.mergeCells('A1:A' + colAttrs.length);
-            for(var x = 0; x < colAttrs.length; x++) {
-                sheet.getRow(x + 1).font = { bold: true };
-                sheet.getRow(x + 1).fill = {
-                    type: 'pattern',
-                    pattern: 'solid',
-                    fgColor: { argb: 'eeeeee' },
-                  };
+
+            // width
+            for (var c = 0; c < result[0].length; c++) {
+                sheet.columns[c].width = Math.max(6, ("" + result[0][c]).length + 2)
             }
-            for(var x = 0; x < rowAttrs.length; x++) {
-                sheet.getColumn(x + 1).font = { bold: true };
-                sheet.getColumn(x + 1).fill = {
-                    type: 'pattern',
-                    pattern: 'solid',
-                    fgColor: { argb: 'eeeeee' },
-                  };
+
+            // style
+            for (var r = 0; r < rowAttrs.length; r++) {
+                sheet.mergeCells(1, r + 1, colAttrs.length, r + 1);
             }
+            sheet.mergeCells(1, result[0].length, colAttrs.length, result[0].length);
+            sheet.mergeCells(result.length, 1, result.length, rowAttrs.length);
+
+            for (var c = 0; c < result[0].length; c++) {
+                for (var r = 0; r < result.length; r++) {
+                    var cell = sheet.getCell(r + 1, c + 1);
+                    cell.font = { name: 'Arial' };
+                    cell.border = {
+                        top: { style: 'thin', color: { argb: 'bbbbbb' } },
+                        left: { style: 'thin', color: { argb: 'bbbbbb' } },
+                        bottom: { style: 'thin', color: { argb: 'bbbbbb' } },
+                        right: { style: 'thin', color: { argb: 'bbbbbb' } }
+                    };
+
+                    var data = c > rowAttrs.length && r >= Math.max(1, colAttrs.length);
+                    if (!data) {
+                        cell.alignment = {
+                            vertical: 'middle',
+                            horizontal: 'center'
+                        };
+                        cell.fill = {
+                            type: 'pattern',
+                            pattern: 'solid',
+                            fgColor: { argb: 'eeeeee' },
+                        };
+                    } else {
+                        cell.alignment = {
+                            vertical: 'middle',
+                            horizontal: 'right'
+                        };
+                    }
+                }
+            }
+
+            if (colAttrs.length == 0) {
+                sheet.spliceColumns(rowAttrs.length + 1, 1);
+            }
+
             var build = async () => {
                 var buf = await workbook.xlsx.writeBuffer();
                 var blob = new Blob([buf], { type: "application/octet-stream" });
