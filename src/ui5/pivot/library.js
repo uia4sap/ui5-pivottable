@@ -9,7 +9,6 @@ sap.ui.define([
     "jquery.sap.global",
     'sap/ui/core/library',
     "./3rdparty/jquery-ui/jquery-ui",
-    "./3rdparty/exceljs/exceljs",
     "./3rdparty/plotly/plotly",
     "./3rdparty/pivottable/pivot"
 ], function(
