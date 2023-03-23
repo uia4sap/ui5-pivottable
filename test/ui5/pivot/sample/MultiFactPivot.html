@@ -1,0 +1,144 @@
+<!DOCTYPE HTML>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Test Page - Pivot Table</title>
+        <base href="../../../../">
+        <!--[if lte IE 9]><script>
+    (function() {
+        var baseTag = document.getElementsByTagName('base')[0];
+        baseTag.href = baseTag.href;
+    })();
+    </script><![endif]-->
+
+        <script id="sap-ui-bootstrap" src="resources/sap-ui-core.js" data-sap-ui-async="true" data-sap-ui-libs="sap.m,ui5.pivot" data-sap-ui-xx-bindingSyntax="complex" data-sap-ui-theme="sap_belize">
+        </script>
+
+        <script>
+            sap.ui.getCore().attachInit(function() {
+                var table = new ui5.pivot.PivotTable();
+                table.setRows(["device"]);
+                table.setCols(["op"]);
+                table.setAggregatorName("Multiple Factors");
+                table.setRendererName("GT Table");
+                // aggregators
+                table.addAggregator(new ui5.pivot.Aggregator({
+                    key: "Sum"
+                }));
+                table.addAggregator(new ui5.pivot.Aggregator({
+                    key: "Count"
+                }));
+                // renderers
+                table.addRenderer(new ui5.pivot.Renderer({
+                    key: "Table"
+                }));
+                // multi factors
+                table.addMultiFactor(new ui5.pivot.MultiFactor({
+                    aggType: "Count Unique Values",
+                    name: "Count",
+                    propName: "wafer",
+                    varName: "a",
+                    hidden: true
+                }));
+                table.addMultiFactor(new ui5.pivot.MultiFactor({
+                    aggType: "Sum",
+                    name: "total",
+                    propName: "cycleTime",
+                    varName: "b"
+                }));
+                // multi factor expressions
+                table.addMultiFactorExp(new ui5.pivot.MultiFactorExp({
+                    name: "Avg",
+                    expression: "variables.b / variables.a"
+                }));
+
+                var button1 = new sap.m.Button();
+                button1.attachPress(function() {
+                    // data
+                    var data = [{
+                        "time": "11-01",
+                        "op": "EXP",
+                        "wafer": "A",
+                        "cycleTime": 10,
+                        "device": "A"
+                    }, {
+                        "time": "11-01",
+                        "op": "EXP",
+                        "wafer": "A",
+                        "cycleTime": 15,
+                        "device": "A"
+                    }, {
+                        "time": "11-02",
+                        "op": "EXP",
+                        "wafer": "A",
+                        "cycleTime": 60,
+                        "device": "A"
+                    }, {
+                        "time": "11-03",
+                        "op": "OVN",
+                        "wafer": "A",
+                        "cycleTime": 420,
+                        "device": "A"
+                    }, {
+                        "time": "11-01",
+                        "op": "EXP",
+                        "wafer": "B",
+                        "cycleTime": 55,
+                        "device": "A"
+                    }, {
+                        "time": "11-03",
+                        "op": "OVN",
+                        "wafer": "B",
+                        "cycleTime": 420,
+                        "device": "A"
+                    }, {
+                        "time": "11-02",
+                        "op": "EXP",
+                        "wafer": "C",
+                        "cycleTime": 50,
+                        "device": "B"
+                    }, {
+                        "time": "11-03",
+                        "op": "COAT",
+                        "wafer": "A",
+                        "cycleTime": 280,
+                        "device": "A"
+                    }, {
+                        "time": "11-04",
+                        "op": "COAT",
+                        "wafer": "B",
+                        "cycleTime": 180,
+                        "device": "A"
+                    }, {
+                        "time": "11-03",
+                        "op": "EXP",
+                        "wafer": "C",
+                        "cycleTime": 145,
+                        "device": "B"
+                    }, {
+                        "time": "11-04",
+                        "op": "COAT",
+                        "wafer": "C",
+                        "cycleTime": 100,
+                        "device": "B"
+                    }];
+                    // load
+                    table.load(data);
+                })
+
+                var oBox = new sap.m.VBox({});
+                oBox.addItem(button1);
+                oBox.addItem(table);
+                oBox.placeAt("content");
+            });
+
+        </script>
+    </head>
+
+    <body id="content" class="sapUiBody">
+    </body>
+
+</html>

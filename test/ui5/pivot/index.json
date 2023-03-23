@@ -20,6 +20,11 @@
                         "description": "the simplest pivot"
                     },
                     {
+                        "id": "MultiFactPivot",
+                        "name": "The multi-fact",
+                        "description": "the multifact pivot"
+                    },
+                    {
                         "id": "OpTimelinePivot",
                         "name": "The timeline",
                         "description": "the operation timeline"

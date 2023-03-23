@@ -22,64 +22,61 @@
                 var table = new ui5.pivot.PivotTable();
                 table.setRows(["site"]);
                 table.setCols(["soft"]);
-                table.addAggregator(new ui5.pivot.Aggregator({
-                    key: "Count"
-                }));
-                table.addAggregator(new ui5.pivot.Aggregator({
-                    key: "Count As Fraction Of Total"
-                }));
-                table.addAggregator(new ui5.pivot.Aggregator({
-                    key: "Count As Fraction Of Rows"
-                }));
-                table.addAggregator(new ui5.pivot.Aggregator({
-                    key: "Count As Fraction Of Columns"
-                }));
                 var button1 = new sap.m.Button();
                 button1.attachPress(function() {
                     table.load([{
                         "site": "S001001",
                         "soft": 4,
                         "hard": 4,
+                        "qty": 544,
                         "device": "A"
                     }, {
                         "site": "S001001",
                         "soft": 4,
                         "hard": 4,
+                        "qty": 512,
                         "device": "A"
                     }, {
                         "site": "S001002",
                         "soft": 4,
                         "hard": 4,
+                        "qty": 716,
                         "device": "B"
                     }, {
                         "site": "S001002",
                         "soft": 5,
                         "hard": 5,
+                        "qty": 495,
                         "device": "B"
                     }, {
                         "site": "S001001",
                         "soft": 9,
                         "hard": 9,
+                        "qty": 303,
                         "device": "C"
                     }, {
                         "site": "S001001",
                         "soft": 4,
                         "hard": 4,
+                        "qty": 723,
                         "device": "A"
                     }, {
                         "site": "S001001",
                         "soft": 4,
                         "hard": 4,
+                        "qty": 691,
                         "device": "A"
                     }, {
                         "site": 1,
                         "soft": 14,
                         "hard": 2,
+                        "qty": 522,
                         "device": "C"
                     }, {
                         "site": "S001002",
                         "soft": 14,
                         "hard": 2,
+                        "qty": 110,
                         "device": "B"
                     }]);
                 })
