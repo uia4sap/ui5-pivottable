@@ -97,10 +97,6 @@ sap.ui.define([
 
         onAfterRendering: function() {},
 
-        save: function() {
-            this.tableToExcel()("data");
-        },
-
         pivot: function() {
             return this.__pivot;
         },
@@ -174,7 +170,15 @@ sap.ui.define([
             // renderer option: table
             rendererOptions["table"] = {
                 clickCallback: function(e, value, filters, pivotData) {
-                    var table = document.getElementsByClassName("pvtTable")[0];
+                    // wrong
+                    var table = e.srcElement;
+                    while (table.nodeName != 'TABLE') {
+                        table = table.parentElement;
+                    }
+                    if (!table) {
+                        return;
+                    }
+
                     var innerHTML = table.innerHTML;
                     if (pivotData["aggregatorName"] == "Multiple Factors") {
                         // rowspan bug
