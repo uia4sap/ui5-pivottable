@@ -6,6 +6,9 @@ fs.copySync('./node_modules/plotly.js/dist/plotly.js', './src/ui5/pivot/3rdparty
 fs.copySync('./node_modules/pivottable/dist/pivot.js', './src/ui5/pivot/3rdparty/pivottable/pivot.js');
 fs.copySync('./node_modules/pivottable/dist/pivot.css', './src/ui5/pivot/3rdparty/pivottable/pivot.css');
 fs.copySync('./node_modules/pivottable/dist/plotly_renderers.js', './src/ui5/pivot/3rdparty/pivottable/plotly_renderers.js');
+fs.copySync('./node_modules/multifact-pivottable/multifact-pivottable.js', './src/ui5/pivot/3rdparty/multifact-pivottable/multifact-pivottable.js');
+fs.copySync('./node_missing/subtotal/subtotal.js', './src/ui5/pivot/3rdparty/pivottable/subtotal.js');
+fs.copySync('./node_missing/subtotal/subtotal.css', './src/ui5/pivot/3rdparty/pivottable/subtotal.css');
 
 // read library namespace from package.json
 var oPackage = require('./package.json');
