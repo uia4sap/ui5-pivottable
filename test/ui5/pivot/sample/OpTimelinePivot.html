@@ -20,6 +20,10 @@
         <script>
             sap.ui.getCore().attachInit(function() {
                 var table = new ui5.pivot.PivotTable();
+                table.attachTableClicked(function(oEvent) {
+                    var recs = oEvent.getParameter("records");
+                    alert(recs);
+                });
                 table.setRows(["recipe"]);
                 table.setCols(["time"]);
                 table.setValues(["wafer"]);
@@ -44,6 +48,11 @@
                     "plotly": {
                         width: "500px",
                         height: "200"
+                    },
+                    "plotlyConfig": {
+                        onClick: function() {
+                            alert("ddd");
+                        }                
                     }
                 })
                 var button1 = new sap.m.Button();

@@ -28,7 +28,8 @@
         "@openui5/sap.ui.layout": "1.58.4",
         "@openui5/themelib_sap_belize": "1.58.4",
         "jquery-ui": "^1.13.0",
-        "pivottable": "2.16.1",
+        "pivottable": "2.23.0",
+        "multifact-pivottable": "1.0.0",
         "exceljs": "^4.3.0"
     },
     "devDependencies": {

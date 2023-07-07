@@ -22,9 +22,20 @@
                 var table = new ui5.pivot.PivotTable();
                 table.setRows(["site"]);
                 table.setCols(["soft"]);
+                table.setClickable(true);
+                table.setHeatColorMode("RANGE");
+                table.attachTableClicked(function(oEvent) {
+                    var recs = oEvent.getParameter("records");
+                    alert(recs);
+                });
+                table.setRendererOptions({
+                    table: {
+                        rowTotals: false
+                    }
+                });
                 var button1 = new sap.m.Button();
                 button1.attachPress(function() {
-                    table.load([{
+                    var data = [{
                         "site": "S001001",
                         "soft": 4,
                         "hard": 4,
@@ -64,25 +75,199 @@
                         "site": "S001001",
                         "soft": 4,
                         "hard": 4,
-                        "qty": 691,
+                        "qty": 61.3,
                         "device": "A"
                     }, {
                         "site": 1,
                         "soft": 14,
                         "hard": 2,
-                        "qty": 522,
+                        "qty": 52,
                         "device": "C"
                     }, {
-                        "site": "S001002",
+                        "site": "S001003",
                         "soft": 14,
+                        "hard": 23,
+                        "qty": 89,
+                        "device": "D"
+                    }, {
+                        "site": "S001003",
+                        "soft": 114,
                         "hard": 2,
-                        "qty": 110,
+                        "qty": 55,
+                        "device": "A"
+                    }, {
+                        "site": "S001003",
+                        "soft": 94,
+                        "hard": 2,
+                        "qty": 10,
                         "device": "B"
-                    }]);
+                    }, {
+                        "site": "S001003",
+                        "soft": 84,
+                        "hard": 2,
+                        "qty": 31,
+                        "device": "C"
+                    },{
+                        "site": "S001003",
+                        "soft": 74,
+                        "hard": 2,
+                        "qty": 56,
+                        "device": "B"
+                    },{
+                        "site": "S001003",
+                        "soft": 64,
+                        "hard": 2,
+                        "qty": 54,
+                        "device": "D"
+                    },{
+                        "site": "S001003",
+                        "soft": 54,
+                        "hard": 76,
+                        "qty": 124,
+                        "device": "D"
+                    },{
+                        "site": "S001003",
+                        "soft": 44,
+                        "hard": 76,
+                        "qty": 10,
+                        "device": "A"
+                    },{
+                        "site": "S001003",
+                        "soft": 34,
+                        "hard": 72,
+                        "qty": 80,
+                        "device": "C"
+                    },{
+                        "site": "S001003",
+                        "soft": 25,
+                        "hard": 72,
+                        "qty": 98,
+                        "device": "B"
+                    },{
+                        "site": "S001003",
+                        "soft": 24,
+                        "hard": 72,
+                        "qty": 11,
+                        "device": "B"
+                    },{
+                        "site": "S001003",
+                        "soft": 15,
+                        "hard": 67,
+                        "qty": 110,
+                        "device": "C"
+                    },{
+                        "site": "S001003",
+                        "soft": 14,
+                        "hard": 67,
+                        "qty": 110,
+                        "device": "C"
+                    },{
+                        "site": "S001003",
+                        "soft": 14,
+                        "hard": 23,
+                        "qty": 110,
+                        "device": "C"
+                    },{
+                        "site": "S001003",
+                        "soft": 19,
+                        "hard": 93,
+                        "qty": 110,
+                        "device": "C"
+                    },{
+                        "site": "S001003",
+                        "soft": 14,
+                        "hard": 74,
+                        "qty": 110,
+                        "device": "C"
+                    },{
+                        "site": "S001003",
+                        "soft": 91,
+                        "hard": 7,
+                        "qty": 110,
+                        "device": "C"
+                    },{
+                        "site": "S001003",
+                        "soft": 3,
+                        "hard": 1,
+                        "qty": 110,
+                        "device": "C"
+                    },{
+                        "site": "S001003",
+                        "soft": 56,
+                        "hard": 3,
+                        "qty": 110,
+                        "device": "C"
+                    },{
+                        "site": "S001003",
+                        "soft": 140,
+                        "hard": 80,
+                        "qty": 110,
+                        "device": "C"
+                    },{
+                        "site": "S001003",
+                        "soft": 154,
+                        "hard": 66,
+                        "qty": 110,
+                        "device": "C"
+                    },{
+                        "site": "S001003",
+                        "soft": 154,
+                        "hard": 5,
+                        "qty": 110,
+                        "device": "C"
+                    },{
+                        "site": "S001003",
+                        "soft": 14,
+                        "hard": 21,
+                        "qty": 110,
+                        "device": "C"
+                    },{
+                        "site": "S001003",
+                        "soft": 44,
+                        "hard": 76,
+                        "qty": 110,
+                        "device": "C"
+                    },{
+                        "site": "S001003",
+                        "soft": 74,
+                        "hard": 25,
+                        "qty": 110,
+                        "device": "C"
+                    },{
+                        "site": "S001003",
+                        "soft": 14,
+                        "hard": 25,
+                        "qty": 110,
+                        "device": "C"
+                    },{
+                        "site": "S001003",
+                        "soft": 114,
+                        "hard": 64,
+                        "qty": 110,
+                        "device": "C"
+                    },{
+                        "site": "S001003",
+                        "soft": 114,
+                        "hard": 21,
+                        "qty": 110,
+                        "device": "C"
+                    },
+                ];
+                    var sortInfo = {
+                        site: ["S001003", "S001001", "1", "S001002"]
+                    };
+                    table.load(data, sortInfo);
                 })
+                var check1 = new sap.m.CheckBox();
+                check1.setText("Clickable");
+                check1.attachSelect(function(oEvent) {
+                    table.setClickable(oEvent.getParameter("selected"));
+                });
 
-                var oBox = new sap.m.VBox({});
+
+                var oBox = new sap.m.VBox();
                 oBox.addItem(button1);
+                oBox.addItem(check1);
                 oBox.addItem(table);
                 oBox.placeAt("content");
             });

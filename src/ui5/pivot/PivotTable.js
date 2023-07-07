@@ -45,17 +45,21 @@ sap.ui.define([
 
                 values: { type: "string[]", group: "data", defaultValue: [] },
 
-                hiddenAttributes: { type: "string[]", group: "data", defaultValue: [] },
+                hiddenAttributes: { type: "string[]", group: "ui", defaultValue: [] },
 
-                hiddenFromAggregators: { type: "string[]", group: "data", defaultValue: [] },
+                hiddenFromAggregators: { type: "string[]", group: "ui", defaultValue: [] },
 
-                hiddenFromDragDrop: { type: "string[]", group: "data", defaultValue: [] },
+                hiddenFromDragDrop: { type: "string[]", group: "ui", defaultValue: [] },
 
-                aggregatorName: { type: "string", group: "data", defaultValue: "Count" },
+                aggregatorName: { type: "string", group: "ui", defaultValue: "Count" },
 
-                rendererName: { type: "string", group: "data", defaultValue: "Table" },
+                rendererName: { type: "string", group: "ui", defaultValue: "Table" },
 
-                rendererOptions: { type: "any", group: "data" }
+                rendererOptions: { type: "any", group: "ui" },
+
+                clickable: { type: "boolean", group: "ui", defaultValue: false },
+
+                heatColorMode: { type: "string", group: "ui" }
             },
 
             aggregations: {
@@ -85,7 +89,13 @@ sap.ui.define([
             },
 
             events: {
-
+                tableClicked: {
+                    parameters: {
+                        filters: { type: "any" },
+                        value: { type: "any" },
+                        records: { type: "array" }
+                    }
+                }
             }
         },
 
@@ -106,7 +116,11 @@ sap.ui.define([
             this.setProperty("data", data, true);
         },
 
-        load: function(data) {
+        setClickable: function(clickable) {
+            this.setProperty("clickable", clickable, true);
+        },
+
+        load: function(data, sortInfo) {
             // custom aggregator: multi factor
             var mfs = this.getMultiFactors();
             var mfAggMap = {};
@@ -148,7 +162,8 @@ sap.ui.define([
             // renderers
             var drs = jQuery.extend(
                 jQuery.pivotUtilities.renderers,
-                jQuery.pivotUtilities.plotly_renderers);
+                jQuery.pivotUtilities.plotly_renderers,
+                jQuery.pivotUtilities.subtotal_renderers);
             var rs = this.getRenderers();
             var renderers = {};
             if (rs.length > 0) {
@@ -166,28 +181,52 @@ sap.ui.define([
             // renderer options
             var tableToExcel = this.tableToExcel();
             var rendererOptions = this.getRendererOptions() || {};
-            rendererOptions = Object.assign({}, rendererOptions);
-            // renderer option: table
-            rendererOptions["table"] = {
-                clickCallback: function(e, value, filters, pivotData) {
-                    // wrong
-                    var table = e.srcElement;
-                    while (table.nodeName != 'TABLE') {
-                        table = table.parentElement;
-                    }
-                    if (!table) {
-                        return;
-                    }
+            var fnTableClicked = function(e, value, filters, pivotData) {
+                if (this.getClickable()) {
+                    var recs = [];
+                    pivotData.forEachMatchingRecord(
+                        filters,
+                        function(rec) {
+                            recs.push(rec);
+                        });
 
-                    var innerHTML = table.innerHTML;
-                    if (pivotData["aggregatorName"] == "Multiple Factors") {
-                        // rowspan bug
-                        var c = pivotData.colAttrs.length;
-                        innerHTML = innerHTML.replace("rowspan=\"" + (c + 3) + "\"", "rowspan=\"" + (c + 1) + "\"")
-                    }
-                    tableToExcel("data", innerHTML);
+                    this.fireTableClicked({
+                        filters: filters,
+                        value: value,
+                        records: recs
+                    });
+                    return;
                 }
+
+                // wrong
+                var table = e.srcElement;
+                while (table.nodeName != 'TABLE') {
+                    table = table.parentElement;
+                }
+                if (!table) {
+                    return;
+                }
+
+                var innerHTML = table.innerHTML;
+                // subtotal fix
+                innerHTML = innerHTML.replace(/[\u00A0-\u2666]/g, function(c) { return '&#' + c.charCodeAt(0) + ';' });
+                // multiple factors fix
+                if (pivotData["aggregatorName"] == "Multiple Factors") {
+                    var c = pivotData.colAttrs.length;
+                    innerHTML = innerHTML.replace("rowspan=\"" + (c + 3) + "\"", "rowspan=\"" + (c + 1) + "\"")
+                }
+
+                tableToExcel("data", innerHTML);
+            }.bind(this);
+            rendererOptions = Object.assign({ table: {} }, rendererOptions);
+
+            // renderer option: table
+            rendererOptions.table["eventHandlers"] = {
+                "click": fnTableClicked
             };
+            rendererOptions.table["clickCallback"] = fnTableClicked;
+
+
             // renderer option: multi factor
             if (mfs.length > 0) {
                 aggregators = jQuery.extend(aggregators, jQuery.pivotUtilities.customAggs);
@@ -198,8 +237,56 @@ sap.ui.define([
                 }
             }
 
+            var colorMode = this.getHeatColorMode();
+            if (colorMode == "MAX") {
+                rendererOptions["heatmap"] = {
+                    colorScaleGenerator: function(values) {
+                        var max = Math.max.apply(Math, values);
+                        return function(x) {
+                            return x == max ? "rgb(255,128,128)" : "rgb(255,255,255)";
+                        };
+                    }
+                }
+            } else if (colorMode == "MIN") {
+                rendererOptions["heatmap"] = {
+                    colorScaleGenerator: function(values) {
+                        var min = Math.min.apply(Math, values);
+                        return function(x) {
+                            return x == min ? "rgb(200,200,255)" : "rgb(255,255,255)";
+                        };
+                    }
+                }
+            } else if (colorMode == "RANGE") {
+                rendererOptions["heatmap"] = {
+                    colorScaleGenerator: function(values) {
+                        var min = Math.min.apply(Math, values);
+                        var max = Math.max.apply(Math, values);
+                        return function(x) {
+                            if (x == max) {
+                                return "rgb(255,128,128)";
+                            } else if (x == min) {
+                                return "rgb(200,200,255)";
+                            }
+                            return "rgb(255,255,255)";
+                        };
+                    }
+                }
+            }
+
+            // sort
+            var sorters = null;
+            if (sortInfo) {
+                sorters = {};
+                var keys = Object.keys(sortInfo);
+                for (var k = 0; k < keys.length; k++) {
+                    var key = keys[k];
+                    sorters[key] = jQuery.pivotUtilities.sortAs(sortInfo[key]);
+                }
+            }
+
             var div = jQuery("#" + this.getId());
             this.__pivot = div.pivotUI(data, {
+                dataClass: jQuery.pivotUtilities.SubtotalPivotData,
                 rows: this.getRows(),
                 cols: this.getCols(),
                 vals: this.getValues(),
@@ -208,6 +295,7 @@ sap.ui.define([
                 hiddenFromDragDrop: this.getHiddenFromDragDrop(),
                 aggregators: aggregators,
                 renderers: renderers,
+                sorters: sorters,
                 aggregatorName: this.getAggregatorName(),
                 rendererName: this.getRendererName(),
                 rendererOptions: rendererOptions
@@ -216,7 +304,7 @@ sap.ui.define([
 
         tableToExcel: function() {
             var uri = 'data:application/vnd.ms-excel;base64,',
-                template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>',
+                template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body style="font-family:verdana;font-size:11px;"><table>{table}</table></body></html>',
                 base64 = function(s) {
                     return window.btoa(decodeURIComponent(encodeURIComponent(s)))
                 },

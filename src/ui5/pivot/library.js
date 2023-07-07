@@ -48,10 +48,12 @@ sap.ui.define([
 
     jQuery.sap.includeScript("resources/ui5/pivot/3rdparty/pivottable/plotly_renderers.js");
     jQuery.sap.includeScript("resources/ui5/pivot/3rdparty/multifact-pivottable/multifact-pivottable.js");
+    jQuery.sap.includeScript("resources/ui5/pivot/3rdparty/pivottable/subtotal.js");
 
     jQuery.sap.includeStyleSheet("resources/ui5/pivot/3rdparty/pivottable/pivot.css");
     jQuery.sap.includeStyleSheet("resources/ui5/pivot/3rdparty/jquery-ui/jquery-ui.css");
     jQuery.sap.includeStyleSheet("resources/ui5/pivot/3rdparty/jquery-ui/jquery-ui.theme.css");
+    jQuery.sap.includeStyleSheet("resources/ui5/pivot/3rdparty/pivottable/subtotal.css");
 
     return ui5.pivot;
 

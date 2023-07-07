@@ -14,8 +14,8 @@ sap.ui.define([
      * @param {sap.ui.core.RenderManager} oRm The RenderManager that can be used for writing to the render output buffer.
      * @param {sap.ui.core.Control} oDiagram An object representation of the control that should be rendered.
      */
-     PivotTableRenderer.render = function(oRm, oDiagram) {
-        oRm.write("<div");
+    PivotTableRenderer.render = function(oRm, oDiagram) {
+        oRm.write("<div ");
         oRm.writeControlData(oDiagram);
         oRm.write(">");
         oRm.write("</div>");
