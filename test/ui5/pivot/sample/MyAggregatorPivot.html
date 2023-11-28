@@ -1,0 +1,169 @@
+<!DOCTYPE HTML>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Test Page - Pivot Table</title>
+        <base href="../../../../">
+        <!--[if lte IE 9]><script>
+    (function() {
+        var baseTag = document.getElementsByTagName('base')[0];
+        baseTag.href = baseTag.href;
+    })();
+    </script><![endif]-->
+
+        <script id="sap-ui-bootstrap" src="resources/sap-ui-core.js" data-sap-ui-async="true" data-sap-ui-libs="sap.m,ui5.pivot" data-sap-ui-xx-bindingSyntax="complex" data-sap-ui-theme="sap_belize">
+        </script>
+        <script>
+
+            var myAggregator = function(args) {
+                var attr;
+                attr = args[0];
+                return function(data, rowKey, colKey) {
+                    return {
+                        sum: 0,
+                        flag: true,
+                        push: function(record) {
+                            this.flag = this.flag & record.good;
+                            if (!isNaN(parseFloat(record[attr]))) {
+                                return this.sum += parseFloat(record[attr]);
+                            }
+                        },
+                        value: function() {
+                            return this.sum;
+                        },
+                        good: function() {
+                            return this.flag;
+                        },
+                        format: $.pivotUtilities.numberFormat(),
+                        numInputs: 1
+                    };
+                };
+            }; 
+
+            sap.ui.getCore().attachInit(function() {
+                var table = new ui5.pivot.PivotTable();
+                table.setRows(["device"]);
+                table.setCols(["op"]);
+                // aggregators
+                table.addAggregator(new ui5.pivot.Aggregator({
+                    key: "My",
+                    name: "My",
+                    plugin: myAggregator
+                }));
+                // renderers
+                table.addRenderer(new ui5.pivot.Renderer({
+                    key: "Table"
+                }));
+                table.addRenderer(new ui5.pivot.Renderer({
+                    key: "Heatmap"
+                }));
+                table.setRendererOptions({
+                    "heatmapKey": "good",
+                    "plotlyConfig": {
+                        onClick: function() {
+                            alert("ddd");
+                        }                
+                    }
+                })
+
+                var button1 = new sap.m.Button();
+                button1.attachPress(function() {
+                    // data
+                    var data = [{
+                        "good": true, 
+                        "time": "11-01",
+                        "op": "EXP",
+                        "wafer": "A",
+                        "cycleTime": 10.00,
+                        "device": "A"
+                    }, {
+                        "good": true, 
+                        "time": "11-01",
+                        "op": "EXP",
+                        "wafer": "A",
+                        "cycleTime": 15.00,
+                        "device": "A"
+                    }, {
+                        "good": false, 
+                        "time": "11-02",
+                        "op": "EXP",
+                        "wafer": "A",
+                        "cycleTime": 60.00,
+                        "device": "A"
+                    }, {
+                        "good": true, 
+                        "time": "11-03",
+                        "op": "OVN",
+                        "wafer": "A",
+                        "cycleTime": 420.00,
+                        "device": "A"
+                    }, {
+                        "good": true, 
+                        "time": "11-01",
+                        "op": "EXP",
+                        "wafer": "B",
+                        "cycleTime": 55.00,
+                        "device": "A"
+                    }, {
+                        "good": true, 
+                        "time": "11-03",
+                        "op": "OVN",
+                        "wafer": "B",
+                        "cycleTime": 420.00,
+                        "device": "A"
+                    }, {
+                        "good": true, 
+                        "time": "11-02",
+                        "op": "EXP",
+                        "wafer": "C",
+                        "cycleTime": 50.00,
+                        "device": "B"
+                    }, {
+                        "good": true, 
+                        "time": "11-03",
+                        "op": "COAT",
+                        "wafer": "A",
+                        "cycleTime": 280.00,
+                        "device": "A"
+                    }, {
+                        "good": false, 
+                        "time": "11-04",
+                        "op": "COAT",
+                        "wafer": "B",
+                        "cycleTime": 180.00,
+                        "device": "A"
+                    }, {
+                        "good": true, 
+                        "time": "11-03",
+                        "op": "EXP",
+                        "wafer": "C",
+                        "cycleTime": 145.00,
+                        "device": "B"
+                    }, {
+                        "good": true, 
+                        "time": "11-04",
+                        "op": "COAT",
+                        "wafer": "C",
+                        "cycleTime": 100.00,
+                        "device": "B"
+                    }];
+                    // load
+                    table.load(data);
+                })
+
+                var oBox = new sap.m.VBox({});
+                oBox.addItem(button1);
+                oBox.addItem(table);
+                oBox.placeAt("content");
+            });
+
+        </script>
+    </head>
+
+    <body id="content" class="sapUiBody">
+    </body>
+
+</html>

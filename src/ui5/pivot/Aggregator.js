@@ -17,7 +17,7 @@ sap.ui.define([
 
                 name: { type: "string", group: "data" },
 
-                plugin: { type: "any", group: "data" }
+                plugin: { type: "function", group: "data" }
             }
         }
 

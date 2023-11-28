@@ -31,6 +31,8 @@ sap.ui.define([
 
         __pivot: null,
 
+        __data: null,
+
         metadata: {
 
             library: 'ui5.pivot',
@@ -59,10 +61,13 @@ sap.ui.define([
 
                 clickable: { type: "boolean", group: "ui", defaultValue: false },
 
-                heatColorMode: { type: "string", group: "ui" }
+                heatColorMode: { type: "string", group: "ui" },
+
+                layoutId: { type: "string", group: "others" }
             },
 
             aggregations: {
+
                 aggregators: {
                     type: "ui5.pivot.Aggregator",
                     multiple: true,
@@ -120,7 +125,72 @@ sap.ui.define([
             this.setProperty("clickable", clickable, true);
         },
 
+        saveLayout: function() {
+            if (!this.__data) {
+                return;
+            }
+
+            var layoutId = this.getLayoutId();
+            if (!layoutId) {
+                return;
+            }
+
+            var div = jQuery("#" + this.getId());
+            var options = div.data("pivotUIOptions");
+            options = JSON.parse(JSON.stringify(options));
+            delete options["aggregators"];
+            delete options["renderers"];
+            delete options["rendererOptions"];
+            delete options["sorters"];
+            var json = JSON.stringify(options);
+
+            var oStorage = jQuery.sap.storage(jQuery.sap.storage.Type.local);
+            oStorage.put(layoutId, json);
+        },
+
+        loadLayout: function() {
+            if (!this.__data) {
+                return;
+            }
+
+            var layoutId = this.getLayoutId();
+            if (!layoutId) {
+                return;
+            }
+
+            var oStorage = jQuery.sap.storage(jQuery.sap.storage.Type.local);
+            var json = oStorage.get(layoutId);
+            if (json == null) {
+                return;
+            }
+
+            var div = jQuery("#" + this.getId());
+            var options1 = JSON.parse(json);
+            var options0 = div.data("pivotUIOptions");
+            if (options0) {
+                options1["aggregators"] = options0.aggregators;
+                options1["renderers"] = options0.renderers;
+                options1["rendererOptions"] = options0.rendererOptions;
+                options1["sorters"] = options0.sorters;
+            }
+            div.pivotUI(this.__data, options1, true);
+        },
+
+        clearFilters: function() {
+            var div = jQuery("#" + this.getId());
+            var options = div.data("pivotUIOptions");
+            if (!options) {
+                return;
+            }
+
+            options.exclusions = {};
+            options.inclusions = {};
+            this.__pivot = div.pivotUI(this.__data, options, true);
+        },
+
         load: function(data, sortInfo) {
+            this.__data = data;
+
             // custom aggregator: multi factor
             var mfs = this.getMultiFactors();
             var mfAggMap = {};
@@ -150,9 +220,12 @@ sap.ui.define([
             if (ags.length > 0) {
                 ags.forEach(function(e) {
                     var key = e.getKey();
+                    var plugin = e.getPlugin();
                     var ag = dags[key];
                     if (ag) {
                         aggregators[key] = ag;
+                    } else if (plugin) {
+                        aggregators[key] = plugin;
                     }
                 });
             } else {
@@ -285,21 +358,28 @@ sap.ui.define([
             }
 
             var div = jQuery("#" + this.getId());
-            this.__pivot = div.pivotUI(data, {
-                dataClass: jQuery.pivotUtilities.SubtotalPivotData,
-                rows: this.getRows(),
-                cols: this.getCols(),
-                vals: this.getValues(),
-                hiddenAttributes: this.getHiddenAttributes(),
-                hiddenFromAggregators: this.getHiddenFromAggregators(),
-                hiddenFromDragDrop: this.getHiddenFromDragDrop(),
-                aggregators: aggregators,
-                renderers: renderers,
-                sorters: sorters,
-                aggregatorName: this.getAggregatorName(),
-                rendererName: this.getRendererName(),
-                rendererOptions: rendererOptions
-            });
+            var options = div.data("pivotUIOptions");
+            if (!options) {
+                options = {
+                    dataClass: jQuery.pivotUtilities.SubtotalPivotData,
+                    rows: this.getRows(),
+                    cols: this.getCols(),
+                    vals: this.getValues(),
+                    hiddenAttributes: this.getHiddenAttributes(),
+                    hiddenFromAggregators: this.getHiddenFromAggregators(),
+                    hiddenFromDragDrop: this.getHiddenFromDragDrop(),
+                    aggregators: aggregators,
+                    renderers: renderers,
+                    sorters: sorters,
+                    aggregatorName: this.getAggregatorName(),
+                    rendererName: this.getRendererName(),
+                    rendererOptions: rendererOptions
+                }
+            } else {
+                options.exclusions = {};
+                options.inclusions = {};
+            }
+            this.__pivot = div.pivotUI(data, options, true);
         },
 
         tableToExcel: function() {
@@ -324,6 +404,7 @@ sap.ui.define([
                 link.click();
             }
         }
+
     });
 
     return PivotTable;

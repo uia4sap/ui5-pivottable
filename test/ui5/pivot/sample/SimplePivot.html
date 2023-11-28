@@ -19,9 +19,11 @@
 
         <script>
             sap.ui.getCore().attachInit(function() {
-                var table = new ui5.pivot.PivotTable();
-                table.setRows(["site"]);
-                table.setCols(["soft"]);
+                var table = new ui5.pivot.PivotTable({
+                    layoutId: "simple_pivot_test"
+                });
+                table.setRows(["soft"]);
+                table.setCols(["site"]);
                 table.setClickable(true);
                 table.setHeatColorMode("RANGE");
                 table.attachTableClicked(function(oEvent) {
@@ -30,10 +32,13 @@
                 });
                 table.setRendererOptions({
                     table: {
-                        rowTotals: false
+                        // rowTotals: false
                     }
                 });
-                var button1 = new sap.m.Button();
+                var button1 = new sap.m.Button({
+                    width: "150px",
+                    text: "Reload"
+                });
                 button1.attachPress(function() {
                     var data = [{
                         "site": "S001001",
@@ -258,6 +263,27 @@
                     };
                     table.load(data, sortInfo);
                 })
+                var button2 = new sap.m.Button({
+                    width: "150px",
+                    text: "Clear Filter"
+                });
+                button2.attachPress(function() {
+                    table.clearFilters();
+                });
+                var button3 = new sap.m.Button({
+                    width: "150px",
+                    text: "Save Layout"
+                });
+                button3.attachPress(function() {
+                    table.saveLayout();
+                });
+                var button4 = new sap.m.Button({
+                    width: "150px",
+                    text: "Load Layout"
+                });
+                button4.attachPress(function() {
+                    table.loadLayout();
+                });
                 var check1 = new sap.m.CheckBox();
                 check1.setText("Clickable");
                 check1.attachSelect(function(oEvent) {
@@ -265,11 +291,18 @@
                 });
 
 
-                var oBox = new sap.m.VBox();
-                oBox.addItem(button1);
-                oBox.addItem(check1);
-                oBox.addItem(table);
-                oBox.placeAt("content");
+                var hBox = new sap.m.HBox();
+                hBox.addItem(button1);
+                hBox.addItem(button2);
+                hBox.addItem(button3);
+                hBox.addItem(button4);
+                hBox.addItem(check1);
+
+                var vBox = new sap.m.VBox();
+                vBox.addItem(hBox);
+                vBox.addItem(table);
+
+                vBox.placeAt("content");
             });
 
         </script>

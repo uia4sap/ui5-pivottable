@@ -1,5 +1,6 @@
 node_modules
 node_missing
 dist
+pivot_ext
 test/ui5lab/browser
 src/ui5/pivot/3rdparty

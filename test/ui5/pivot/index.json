@@ -28,6 +28,11 @@
                         "id": "OpTimelinePivot",
                         "name": "The timeline",
                         "description": "the operation timeline"
+                    },
+                    {
+                        "id": "MyAggregatorPivot",
+                        "name": "my aggregator",
+                        "description": "my aggregator"
                     }
                 ]
             }
