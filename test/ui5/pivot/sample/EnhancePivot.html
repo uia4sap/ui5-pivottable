@@ -236,27 +236,76 @@
                         "qty": 110,
                         "device": "C"
                     }];
+                var sortInfo = {
+                    site: ["S001003", "S001001", "1", "S001002"]
+                };
 
                 var table = new ui5.pivot.PivotTable({
-                    rendererAreaWidth: "500px",
-                    rendererAreaHeight: "300px"
+                    layoutId: "simple_pivot_test"
                 });
-                table.setRows(["soft", "device"]);
-                table.setCols(["site", "hard"]);
-
+                table.setRows(["soft"]);
+                table.setCols(["site"]);
+                table.setClickable(true);
+                table.setHeatColorMode("RANGE");
+                table.attachTableClicked(function(oEvent) {
+                    var recs = oEvent.getParameter("records");
+                    alert(recs);
+                });
+                table.setRendererOptions({
+                    table: {
+                        // rowTotals: false
+                    }
+                });
                 var button1 = new sap.m.Button({
                     width: "120px",
-                    text: "Load"
+                    text: "Reload"
                 });
                 button1.attachPress(function() {
-                    table.load(data);
+                    table.load(data, sortInfo);
                 })
+                var button2 = new sap.m.Button({
+                    width: "120px",
+                    text: "Clear Filter"
+                });
+                button2.attachPress(function() {
+                    table.clearFilters();
+                });
+                var button3 = new sap.m.Button({
+                    width: "120px",
+                    text: "Save Layout"
+                });
+                button3.attachPress(function() {
+                    table.saveLayout();
+                });
+                var button4 = new sap.m.Button({
+                    width: "120px",
+                    text: "Load Layout"
+                });
+                button4.attachPress(function() {
+                    table.loadLayout();
+                });
+                var check1 = new sap.m.CheckBox();
+                check1.setSelected(true);
+                check1.setText("Clickable");
+                check1.attachSelect(function(oEvent) {
+                    table.setClickable(oEvent.getParameter("selected"));
+                });
+
+
+                var hBox = new sap.m.HBox();
+                hBox.addItem(button2);
+                hBox.addItem(button3);
+                hBox.addItem(button4);
+                hBox.addItem(check1);
 
                 var vBox = new sap.m.VBox();
+                vBox.addItem(hBox);
                 vBox.addItem(table);
                 vBox.addItem(button1);
+
                 vBox.placeAt("content");
             });
+
         </script>
     </head>
 

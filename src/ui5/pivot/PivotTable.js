@@ -63,7 +63,9 @@ sap.ui.define([
 
                 heatColorMode: { type: "string", group: "ui" },
 
-                layoutId: { type: "string", group: "others" }
+                layoutId: { type: "string", group: "others" },
+
+                rendererAreaHeight: { type: "string", group: "ui" }
             },
 
             aggregations: {
@@ -291,7 +293,9 @@ sap.ui.define([
 
                 tableToExcel("data", innerHTML);
             }.bind(this);
-            rendererOptions = Object.assign({ table: {} }, rendererOptions);
+            rendererOptions = Object.assign({
+                table: {}
+            }, rendererOptions);
 
             // renderer option: table
             rendererOptions.table["eventHandlers"] = {
@@ -380,6 +384,15 @@ sap.ui.define([
                 options.inclusions = {};
             }
             this.__pivot = div.pivotUI(data, options, true);
+
+            var area = jQuery("#" + this.getId()).find(".pvtRendererArea:eq('0')");
+            var rW = (area.width() - 100) + "px";
+            var rH = this.getRendererAreaHeight();
+            if ( rH == null) {
+                rH = (window.innerHeight - area.offset().top - area.position().top) + "px";
+            }
+            area.css("width", rW);
+            area.css("height",  rH);
         },
 
         tableToExcel: function() {

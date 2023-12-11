@@ -954,8 +954,6 @@
                     };
                 };
             }
-            var rowH = 16;
-            var frzH = 27;
             result = document.createElement("table");
             result.className = "pvtTable";
             spanSize = function(arr, i, j) {
@@ -986,6 +984,9 @@
                 }
                 return len;
             };
+
+            var rowH = 16;
+            var frzH = 27;
             thead = document.createElement("thead");
             for (j in colAttrs) {
                 if (!hasProp.call(colAttrs, j)) continue;
@@ -993,15 +994,19 @@
                 tr = document.createElement("tr");
                 if (parseInt(j) === 0 && rowAttrs.length !== 0) {
                     th = document.createElement("th");
-                    th.className = "pvtAxis";
+                    th.className = "pvtAxisLabel";
                     th.style.top = "0px";
+                    th.style.left = "0px";
+                    th.style["z-index"] = 3;
                     th.setAttribute("colspan", rowAttrs.length);
                     th.setAttribute("rowspan", colAttrs.length);
                     tr.appendChild(th);
                 }
                 th = document.createElement("th");
-                th.className = "pvtAxisLabel pvtAxis";
-                th.style.top = (j * frzH) + "px";
+                th.className = rowAttrs.length !== 0 
+                    ? "pvtAxisLabel axisCol" + rowAttrs.length
+                    : "pvtAxisLabel axisCol0";
+                th.style.top = ((frzH + 1) * j) + "px";
                 th.style.left = "0px";
                 th.textContent = c;
                 th.setAttribute("height", rowH + "px");
@@ -1012,10 +1017,10 @@
                     x = spanSize(colKeys, parseInt(i), parseInt(j));
                     if (x !== -1) {
                         th = document.createElement("th");
-                        th.className = "pvtColLabel pvtFreeze";
+                        th.className = "pvtColLabel";
+                        th.style["z-index"] = 2;
                         th.textContent = colKey[j];
-                        th.style.top = (j * frzH) + "px";
-                        th.style.left = "0px";
+                        th.style.top = ((frzH + 1) * j) + "px";
                         th.setAttribute("colspan", x);
                         if (parseInt(j) === colAttrs.length - 1 && rowAttrs.length !== 0) {
                             th.setAttribute("rowspan", 2);
@@ -1028,7 +1033,7 @@
                 }
                 if (parseInt(j) === 0 && opts.table.rowTotals) {
                     th = document.createElement("th");
-                    th.className = "pvtTotalLabel pvtRowTotalLabel pvtFreezeHead";
+                    th.className = "pvtTotalLabel pvtRowTotalLabel";
                     th.innerHTML = opts.localeStrings.totals;
                     th.style.top = "0px";
                     th.style.right = "0px";
@@ -1043,22 +1048,23 @@
                     if (!hasProp.call(rowAttrs, i)) continue;
                     r = rowAttrs[i];
                     th = document.createElement("th");
-                    th.className = "pvtAxisLabel pvtAxis pvtFreezeHead";
+                    th.className = "pvtAxisLabel axisCol" + i;
                     th.textContent = r;
-                    th.style.top = (colAttrs.length * frzH) + "px";
+                    th.style.top = ((frzH + 1) * colAttrs.length) + "px";
                     th.style.left = "0px";
                     th.setAttribute("height", rowH + "px");
                     tr.appendChild(th);
                 }
                 th = document.createElement("th");
-                th.style.top = (colAttrs.length * frzH) + "px";
+                th.style.top = ((frzH + 1) * colAttrs.length) + "px";
                 th.setAttribute("height", rowH + "px");
                 if (colAttrs.length === 0) {
-                    th.className = "pvtTotalLabel pvtRowTotalLabel pvtFreezeHead";
+                    th.className = "pvtTotalLabel pvtRowTotalLabel";
                     th.style.right = "0px";
                     th.innerHTML = opts.localeStrings.totals;
                 } else {
-                    th.className = "pvtAxis pvtFreezeSubHead";
+                    th.className = "pvtAxisLabel axisCol" + rowAttrs.length;
+                    th.style["z-index"] = 2;
                 }
                 tr.appendChild(th);
                 thead.appendChild(tr);
@@ -1076,7 +1082,7 @@
                     if (x !== -1) {
                         th = document.createElement("th");
                         th.style.left = "0px";
-                        th.className = "pvtRowLabel pvtFreeze";
+                        th.className = "pvtRowLabel axisCol" + j;
                         th.textContent = txt;
                         th.setAttribute("rowspan", x);
                         if (parseInt(j) === rowAttrs.length - 1 && colAttrs.length !== 0) {
@@ -1104,7 +1110,7 @@
                     totalAggregator = pivotData.getAggregator(rowKey, []);
                     val = totalAggregator.value();
                     td = document.createElement("td");
-                    td.className = "pvtTotal rowTotal pvtFreeze";
+                    td.className = "pvtTotal rowTotal";
                     td.style.right = "0px";
                     td.textContent = totalAggregator.format(val);
                     td.setAttribute("data-value", val);
@@ -1120,7 +1126,7 @@
                 tr = document.createElement("tr");
                 if (opts.table.colTotals || rowAttrs.length === 0) {
                     th = document.createElement("th");
-                    th.className = "pvtTotalLabel pvtColTotalLabel pvtFreezeHead";
+                    th.className = "pvtTotalLabel pvtColTotalLabel";
                     th.style.left = "0px";
                     th.style.bottom = "0px";
                     th.innerHTML = opts.localeStrings.totals;
@@ -1133,7 +1139,7 @@
                     totalAggregator = pivotData.getAggregator([], colKey);
                     val = totalAggregator.value();
                     td = document.createElement("td");
-                    td.className = "pvtTotal colTotal pvtFreeze";
+                    td.className = "pvtTotal colTotal";
                     td.style.bottom = "0px";
                     td.textContent = totalAggregator.format(val);
                     td.setAttribute("data-value", val);
@@ -1147,7 +1153,7 @@
                     totalAggregator = pivotData.getAggregator([], []);
                     val = totalAggregator.value();
                     td = document.createElement("td");
-                    td.className = "pvtGrandTotal pvtFreeze";
+                    td.className = "pvtGrandTotal";
                     td.style.right = "0px";
                     td.style.bottom = "0px";
                     td.textContent = totalAggregator.format(val);
@@ -1165,9 +1171,19 @@
 
             var tableDiv = document.createElement("div");
             tableDiv.className = "pvtTable";
+            tableDiv.setAttribute("data-numrows", result.getAttribute("data-numrows"));
+            tableDiv.setAttribute("data-numcols", result.getAttribute("data-numcols"));
+            tableDiv.setAttribute("pivotUIOptions", result.getAttribute("pivotUIOptions"));
             tableDiv.appendChild(result);
-
-
+            tableDiv["loaded"] = function() {
+                _row = result.rows[colAttrs.length];
+                var _left = 0;
+                for(var c = 0; c <= rowAttrs.length; c++) {
+                    var clzName = ".axisCol" + c;
+                    $(clzName).css("left", _left + "px");
+                    _left += _row.cells[c].offsetWidth;
+                }
+            };
             return tableDiv;
         };
 
@@ -1229,7 +1245,12 @@
             while (x.hasChildNodes()) {
                 x.removeChild(x.lastChild);
             }
-            return this.append(result);
+
+            var pvt = this.append(result);
+            if (result["loaded"]) {
+                result["loaded"]();
+            }
+            return pvt;
         };
 
         /*
@@ -1313,8 +1334,9 @@
                     return recordsProcessed++;
                 });
                 uiTable = $("<table>", {
-                    "class": "pvtUi"
-                }).attr("cellpadding", 5);
+                        "class": "pvtUi"
+                    })
+                    .attr("cellpadding", 5);
                 rendererControl = $("<td>").addClass("pvtUiCell");
                 renderer = $("<select>").addClass('pvtRenderer').appendTo(rendererControl).bind("change", function() {
                     return refresh();

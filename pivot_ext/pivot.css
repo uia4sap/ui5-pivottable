@@ -1,74 +1,105 @@
-.pvtUi { color: #333; }
+.pvtUi { 
+    color: #333; 
+}
 
 div.pvtTable {
-	overflow:auto;
-	width:50%;
+	overflow: auto;
+    width: inherit;
+    height: inherit;
 }
+
 table.pvtTable {
     font-size: 8pt;
     text-align: left;
-    border: 1px solid #CDCDCD;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0px;
     table-layout: fixed;
 }
 table.pvtTable thead tr th, table.pvtTable tbody tr th {
-    background-color: #e6EEEE;
+    background-color: #E6EEEE;
     border: 1px solid #CDCDCD;
     font-size: 8pt;
     padding: 5px;
+}   
+table.pvtTable .pvtAxisLabel {
+    background-color: #E6E6E6;
+	position: sticky;
+	z-index: 3;
 }
-
-.pvtAxis {
-	position:sticky;
-	z-index:3;
-}
-.pvtFreezeHead {
-	position:sticky;
-	z-index:3;
-}
-.pvtFreezeSubHead {
-	position:sticky;
-	z-index:2;
-}
-.pvtFreeze {
-	position:sticky;
-	z-index:1;
-}
-
 table.pvtTable .pvtColLabel {
     border: 1px solid #CDCDCD;
+	position: sticky;
+	z-index: 2;
     text-align: center;
+}
+table.pvtTable .pvtRowLabel {
+    border: 1px solid #CDCDCD;
+	position: sticky;
+	z-index: 1;
 }
 table.pvtTable .pvtTotalLabel {
     text-align: right;
+	position: sticky;
+	z-index: 3;
+    border: 1px solid #CDCDCD;
 }
-
+table.pvtTable .pvtRowTotalLabel {
+    border-color: #CDCDCD #CDCDCD #CDCDCD #CDCDCD;
+}
 table.pvtTable tbody tr td:not(.bad)  {
     color: #3D3D3D;
     padding: 5px;
-    background-color: #FFF;
-    border: 1px solid #CDCDCD;
     vertical-align: top;
     text-align: right;
 }
 table.pvtTable tbody tr td.bad  {
     color: #3D3D3D;
     padding: 5px;
-    background-color: #ff0000; 
-    border: 1px solid #CDCDCD;
+    background-color: #FF0000; 
     vertical-align: top;
     text-align: right;
 }
 
-.pvtTotal, .pvtGrandTotal { font-weight: bold; }
+.pvtTotal { 
+    background-color: #F9F9F9;
+    font-weight: bold; 
+	position: sticky;
+	z-index: 2;
+    border: 1px solid #CDCDCD;
+}
+.rowTotal { 
+    border-color: #E6EEEE #CDCDCD #CDCDCD #CDCDCD;
+}
+.colTotal { 
+    border-color: #CDCDCD #CDCDCD #CDCDCD #E6EEEE;
+}
+.pvtGrandTotal { 
+    background-color: #F9F9F9;
+    font-weight: bold; 
+	position: sticky;
+	z-index: 3;
+    border: 1px solid #CDCDCD;
+}
 
-.pvtVals { text-align: center; white-space: nowrap;}
+.pvtVal {
+    border: 1px solid #CDCDCD;
+    border-color: #E6EEEE #CDCDCD #CDCDCD #E6EEEE;
+}
+.pvtVals { 
+    text-align: center; 
+    white-space: nowrap;
+}
+
 .pvtRowOrder, .pvtColOrder {
     cursor:pointer;
     width: 15px;
     margin-left: 5px;
-    display: inline-block; }
-.pvtAggregator { margin-bottom: 5px ;}
+    display: inline-block; 
+}
+
+.pvtAggregator {
+    margin-bottom: 5px ;
+}
 
 .pvtAxisContainer, .pvtVals {
     border: 1px solid gray;
@@ -76,7 +107,6 @@ table.pvtTable tbody tr td.bad  {
     padding: 5px;
     min-width: 20px;
     min-height: 20px;
-
     user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -112,15 +142,19 @@ table.pvtTable tbody tr td.bad  {
     color: grey;
 }
 
-.pvtHorizList li { display: inline; }
-.pvtVertList { vertical-align: top; }
+.pvtHorizList li { 
+    display: inline; 
+}
+.pvtVertList { 
+    vertical-align: top; 
+}
 
 .pvtFilteredAttribute { 
     font-style: italic; 
     font-weight: bold; 
 }
 
-.pvtFilterBox{
+.pvtFilterBox {
     z-index: 100;
     width: 300px;
     border: 1px solid gray;
@@ -129,14 +163,29 @@ table.pvtTable tbody tr td.bad  {
     text-align: center;
 }
 
-.pvtFilterBox h4{ margin: 15px; }
-.pvtFilterBox p { margin: 10px auto; }
-.pvtFilterBox label { font-weight: normal; }
-.pvtFilterBox input[type='checkbox'] { margin-right: 10px; margin-left: 10px; }
-.pvtFilterBox input[type='text'] { width: 230px; }
-.pvtFilterBox .count { color: gray; font-weight: normal; margin-left: 3px;}
+.pvtFilterBox h4 { 
+    margin: 15px; 
+}
+.pvtFilterBox p { 
+    margin: 10px auto; 
+}
+.pvtFilterBox label { 
+    font-weight: normal; 
+}
+.pvtFilterBox input[type='checkbox'] { 
+    margin-right: 10px; 
+    margin-left: 10px; 
+}
+.pvtFilterBox input[type='text'] { 
+    width: 230px; 
+}
+.pvtFilterBox .count { 
+    color: gray; 
+    font-weight: normal; 
+    margin-left: 3px;
+}
 
-.pvtCheckContainer{
+.pvtCheckContainer {
     text-align: left;
     font-size: 14px;
     white-space: nowrap;
@@ -147,6 +196,12 @@ table.pvtTable tbody tr td.bad  {
     border-bottom: 1px solid lightgrey;
 }
 
-.pvtCheckContainer p{ margin: 5px; }
+.pvtCheckContainer p { 
+    margin: 5px; 
+}
 
-.pvtRendererArea { padding: 5px;}
+.pvtRendererArea { 
+	overflow: auto;
+    padding: 5px;
+    width: 100%;
+}

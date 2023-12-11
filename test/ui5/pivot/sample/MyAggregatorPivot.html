@@ -69,7 +69,9 @@
                     }
                 })
 
-                var button1 = new sap.m.Button();
+                var button1 = new sap.m.Button({
+                    icon: "sap-icon://refresh"
+                });
                 button1.attachPress(function() {
                     // data
                     var data = [{

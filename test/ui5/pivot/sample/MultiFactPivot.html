@@ -19,7 +19,9 @@
 
         <script>
             sap.ui.getCore().attachInit(function() {
-                var table = new ui5.pivot.PivotTable();
+                var table = new ui5.pivot.PivotTable({
+                    rendererAreaHeight: "300px"
+                });
                 table.setRows(["device"]);
                 table.setCols(["op"]);
                 table.setAggregatorName("Multiple Factors");
@@ -55,7 +57,9 @@
                     expression: "variables.b / variables.a"
                 }));
 
-                var button1 = new sap.m.Button();
+                var button1 = new sap.m.Button({
+                    icon: "sap-icon://refresh"
+                });
                 button1.attachPress(function() {
                     // data
                     var data = [{

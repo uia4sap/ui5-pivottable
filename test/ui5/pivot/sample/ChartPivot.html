@@ -19,10 +19,8 @@
 
         <script>
             sap.ui.getCore().attachInit(function() {
-                var table = new ui5.pivot.PivotTable();
-                table.attachTableClicked(function(oEvent) {
-                    var recs = oEvent.getParameter("records");
-                    alert(recs);
+                var table = new ui5.pivot.PivotTable({
+                    rendererAreaHeight: "200px"
                 });
                 table.setRows(["recipe"]);
                 table.setCols(["time"]);
@@ -46,8 +44,7 @@
                 table.setRendererName("Bar Chart");
                 table.setRendererOptions({
                     "plotly": {
-                        width: "500px",
-                        height: "200"
+                        height: "300px"
                     },
                     "plotlyConfig": {
                         onClick: function() {
@@ -55,7 +52,9 @@
                         }                
                     }
                 })
-                var button1 = new sap.m.Button();
+                var button1 = new sap.m.Button({
+                    icon: "sap-icon://refresh"
+                });
                 button1.attachPress(function() {
                     table.load([{
                         "id": 1,
