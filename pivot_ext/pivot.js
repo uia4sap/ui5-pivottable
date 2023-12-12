@@ -985,8 +985,8 @@
                 return len;
             };
 
-            var rowH = 16;
-            var frzH = 27;
+            var rowH = "16px";
+            var frzH = 28;
             thead = document.createElement("thead");
             for (j in colAttrs) {
                 if (!hasProp.call(colAttrs, j)) continue;
@@ -997,19 +997,16 @@
                     th.className = "pvtAxisLabel";
                     th.style.top = "0px";
                     th.style.left = "0px";
-                    th.style["z-index"] = 3;
                     th.setAttribute("colspan", rowAttrs.length);
                     th.setAttribute("rowspan", colAttrs.length);
                     tr.appendChild(th);
                 }
                 th = document.createElement("th");
-                th.className = rowAttrs.length !== 0 
-                    ? "pvtAxisLabel axisCol" + rowAttrs.length
-                    : "pvtAxisLabel axisCol0";
-                th.style.top = ((frzH + 1) * j) + "px";
+                th.className = "pvtAxisLabel axisCol" + rowAttrs.length;
+                th.style.top = (frzH * j) + "px";
                 th.style.left = "0px";
                 th.textContent = c;
-                th.setAttribute("height", rowH + "px");
+                th.setAttribute("height", rowH);
                 tr.appendChild(th);
                 for (i in colKeys) {
                     if (!hasProp.call(colKeys, i)) continue;
@@ -1018,15 +1015,13 @@
                     if (x !== -1) {
                         th = document.createElement("th");
                         th.className = "pvtColLabel";
-                        th.style["z-index"] = 2;
                         th.textContent = colKey[j];
-                        th.style.top = ((frzH + 1) * j) + "px";
+                        th.style.top = (frzH * j) + "px";
                         th.setAttribute("colspan", x);
                         if (parseInt(j) === colAttrs.length - 1 && rowAttrs.length !== 0) {
                             th.setAttribute("rowspan", 2);
-                            th.setAttribute("height", (2 * rowH) + "px");
                         } else {
-                            th.setAttribute("height", rowH + "px");
+                            th.setAttribute("height", rowH);
                         }
                         tr.appendChild(th);
                     }
@@ -1050,21 +1045,20 @@
                     th = document.createElement("th");
                     th.className = "pvtAxisLabel axisCol" + i;
                     th.textContent = r;
-                    th.style.top = ((frzH + 1) * colAttrs.length) + "px";
+                    th.style.top = (frzH * colAttrs.length) + "px";
                     th.style.left = "0px";
-                    th.setAttribute("height", rowH + "px");
+                    th.setAttribute("height", rowH);
                     tr.appendChild(th);
                 }
                 th = document.createElement("th");
-                th.style.top = ((frzH + 1) * colAttrs.length) + "px";
-                th.setAttribute("height", rowH + "px");
+                th.style.top = (frzH * colAttrs.length) + "px";
+                th.setAttribute("height", rowH);
                 if (colAttrs.length === 0) {
                     th.className = "pvtTotalLabel pvtRowTotalLabel";
                     th.style.right = "0px";
                     th.innerHTML = opts.localeStrings.totals;
                 } else {
                     th.className = "pvtAxisLabel axisCol" + rowAttrs.length;
-                    th.style["z-index"] = 2;
                 }
                 tr.appendChild(th);
                 thead.appendChild(tr);
@@ -1248,7 +1242,10 @@
 
             var pvt = this.append(result);
             if (result["loaded"]) {
-                result["loaded"]();
+                result.loaded();
+            }
+            else if (result.context && result.context["loaded"]) {
+                result.context.loaded();
             }
             return pvt;
         };

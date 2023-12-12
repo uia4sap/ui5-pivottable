@@ -43,6 +43,9 @@ table.pvtTable .pvtTotalLabel {
 	z-index: 3;
     border: 1px solid #CDCDCD;
 }
+table.pvtTable .pvtColTotalLabel {
+    bottom: 0px
+}
 table.pvtTable .pvtRowTotalLabel {
     border-color: #CDCDCD #CDCDCD #CDCDCD #CDCDCD;
 }
@@ -72,6 +75,7 @@ table.pvtTable tbody tr td.bad  {
 }
 .colTotal { 
     border-color: #CDCDCD #CDCDCD #CDCDCD #E6EEEE;
+    bottom: 0px;
 }
 .pvtGrandTotal { 
     background-color: #F9F9F9;
@@ -79,6 +83,7 @@ table.pvtTable tbody tr td.bad  {
 	position: sticky;
 	z-index: 3;
     border: 1px solid #CDCDCD;
+    bottom: 0px;
 }
 
 .pvtVal {

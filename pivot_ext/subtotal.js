@@ -309,6 +309,7 @@
           arrow = "";
         }
         ah.th = createElement("th", "pvtAxisLabel " + hClass, "" + arrow + ah.text);
+        ah.th.setAttribute("height", 16);
         if (col < attrs.length - 1 && col < opts.disableFrom && !opts.disableExpandCollapse) {
           ah.th.onclick = function(event) {
             event = event || window.event;
@@ -328,12 +329,17 @@
         for (col = k = 0, len = colAttrs.length; k < len; col = ++k) {
           attr = colAttrs[col];
           ah = buildAxisHeader(axisHeaders, col, colAttrs, opts.colSubtotalDisplay);
+          addClass(ah.th, "axisCol" + rowAttrs.length);
+          ah.th.style.top = (28 * col) + "px";
           ah.tr = createElement("tr");
           if (col === 0 && rowAttrs.length !== 0) {
-            ah.tr.appendChild(createElement("th", null, null, {
+            var th = createElement("th", "pvtAxisLabel", null, {
               colspan: rowAttrs.length,
               rowspan: colAttrs.length
-            }));
+            });
+            th.style.top = "0px";
+            th.style.left = "0px";
+            ah.tr.appendChild(th);
           }
           ah.tr.appendChild(ah.th);
           thead.appendChild(ah.tr);
@@ -350,10 +356,13 @@
         };
         for (col = k = 0, ref = rowAttrs.length - 1; 0 <= ref ? k <= ref : k >= ref; col = 0 <= ref ? ++k : --k) {
           ah = buildAxisHeader(axisHeaders, col, rowAttrs, opts.rowSubtotalDisplay);
+          addClass(ah.th, "axisCol" + col);
+          ah.th.style.top = (28 * colAttrs.length) + "px";
           axisHeaders.tr.appendChild(ah.th);
         }
         if (colAttrs.length !== 0) {
-          th = createElement("th");
+          th = createElement("th", "pvtAxisLabel axisCol" + rowAttrs.length);
+          th.style.top = (28 * colAttrs.length) + "px";
           axisHeaders.tr.appendChild(th);
         }
         thead.appendChild(axisHeaders.tr);
@@ -378,7 +387,8 @@
         ah.attrHeaders.push(h);
         h.node = node.counter;
         h.onClick = collapseCol;
-        addClass(h.th, classColShow + " col" + h.row + " colcol" + h.col + " " + classColExpanded);
+        h.th.style.top = (28 * h.col) + "px";
+        addClass(h.th, "pvtColLabel " + classColShow + " col" + h.row + " colcol" + h.col + " " + classColExpanded);
         h.th.setAttribute("data-colnode", h.node);
         if (h.children.length !== 0) {
           h.th.colSpan = h.childrenSpan;
@@ -399,8 +409,9 @@
               return h.onClick(axisHeaders, h, opts.colSubtotalDisplay);
             };
           }
-          h.sTh = createElement("th", "pvtColLabelFiller " + classColShow + " col" + h.row + " colcol" + h.col + " " + classColExpanded);
+          h.sTh = createElement("th", "pvtColLabel pvtColLabelFiller " + classColShow + " col" + h.row + " colcol" + h.col + " " + classColExpanded);
           h.sTh.setAttribute("data-colnode", h.node);
+          h.sTh.style.top = (28 * (h.col + 1)) + "px";
           h.sTh.rowSpan = colAttrs.length - h.col;
           if (opts.colSubtotalDisplay.hideOnExpand) {
             replaceClass(h.sTh, classColShow, classColHide);
@@ -421,6 +432,8 @@
         th = createElement("th", "pvtTotalLabel rowTotal", opts.localeStrings.totals, {
           rowspan: colAttrs.length === 0 ? 1 : colAttrs.length + (rowAttrs.length === 0 ? 0 : 1)
         });
+        th.style.top = "0px";
+        th.style.right = "0px";
         return tr.appendChild(th);
       };
       buildRowHeader = function(tbody, axisHeaders, attrHeaders, h, rowAttrs, colAttrs, node, opts) {
@@ -437,7 +450,7 @@
         if (h.children.length !== 0) {
           firstChild = h[h.children[0]];
         }
-        addClass(h.th, classRowShow + " row" + h.row + " rowcol" + h.col + " " + classRowExpanded);
+        addClass(h.th, "axisCol" + h.col + " " + classRowShow + " row" + h.row + " rowcol" + h.col + " " + classRowExpanded);
         h.th.setAttribute("data-rownode", h.node);
         if (h.col === rowAttrs.length - 1 && colAttrs.length !== 0) {
           h.th.colSpan = 2;
@@ -462,7 +475,7 @@
               return h.onClick(axisHeaders, h, opts.rowSubtotalDisplay);
             };
           }
-          h.sTh = createElement("th", "pvtRowLabelFiller row" + h.row + " rowcol" + h.col + " " + classRowExpanded + " " + classRowShow);
+          h.sTh = createElement("th", "pvtRowLabel axisCol" + (h.col + 1) + " pvtRowLabelFiller row" + h.row + " rowcol" + h.col + " " + classRowExpanded + " " + classRowShow);
           if (opts.rowSubtotalDisplay.hideOnExpand) {
             replaceClass(h.sTh, classRowShow, classRowHide);
           }
@@ -570,6 +583,7 @@
             "data-rowcol": "col" + rh.col,
             "data-rownode": rh.node
           }, getTableEventHandlers(val, rh.key, [], rowAttrs, colAttrs, opts));
+          td.style.right = "0px";
           results.push(tr.appendChild(td));
         }
         return results;
@@ -581,6 +595,7 @@
         th = createElement("th", "pvtTotalLabel colTotal", opts.localeStrings.totals, {
           colspan: colspan
         });
+        th.style.left = "0px";
         tr.appendChild(th);
         return tr;
       };
@@ -617,6 +632,7 @@
         td = createElement("td", "pvtGrandTotal", totalAggregator.format(val), {
           "data-value": val
         }, getTableEventHandlers(val, [], [], rowAttrs, colAttrs, opts));
+        td.style.right = "0px";
         tr.appendChild(td);
         return tbody.appendChild(tr);
       };
@@ -1038,7 +1054,16 @@
       tableDiv.setAttribute("data-numcols", tableResult.getAttribute("data-numcols"));
       tableDiv.setAttribute("pivotUIOptions", tableResult.getAttribute("pivotUIOptions"));
       tableDiv.appendChild(tableResult);
-      return tableDiv;
+      tableDiv["loaded"] = function() {
+        _row = tableResult.rows[colAttrs.length];
+        var _left = 0;
+        for(var c = 0; c <= rowAttrs.length; c++) {
+            var clzName = ".axisCol" + c;
+            $(clzName).css("left", _left + "px");
+            _left += _row.cells[c].offsetWidth;
+        }
+    };
+return tableDiv;
     };
     $.pivotUtilities.subtotal_renderers = {
       "Table With Subtotal": function(pvtData, opts) {
