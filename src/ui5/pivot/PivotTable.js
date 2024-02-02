@@ -71,7 +71,7 @@ sap.ui.define([
             aggregations: {
 
                 aggregators: {
-                    type: "ui5.pivot.Aggregator",
+                    type: "ui5.pivot.BaseAggregator",
                     multiple: true,
                     singularName: "aggregator"
                 },
@@ -176,6 +176,7 @@ sap.ui.define([
                 options1["sorters"] = options0.sorters;
             }
             div.pivotUI(this.__data, options1, true);
+            this.resize();
         },
 
         clearFilters: function() {
@@ -188,6 +189,7 @@ sap.ui.define([
             options.exclusions = {};
             options.inclusions = {};
             this.__pivot = div.pivotUI(this.__data, options, true);
+            this.resize();
         },
 
         load: function(data, sortInfo) {
@@ -221,14 +223,18 @@ sap.ui.define([
             var aggregators = {};
             if (ags.length > 0) {
                 ags.forEach(function(e) {
+                    e.build(aggregators);
+                    /**
                     var key = e.getKey();
+                    var name = e.getName() || key;
                     var plugin = e.getPlugin();
                     var ag = dags[key];
                     if (ag) {
-                        aggregators[key] = ag;
+                        aggregators[name] = ag;
                     } else if (plugin) {
-                        aggregators[key] = plugin;
+                        aggregators[name] = plugin;
                     }
+                     */
                 });
             } else {
                 aggregators = dags;
@@ -244,9 +250,10 @@ sap.ui.define([
             if (rs.length > 0) {
                 rs.forEach(function(e) {
                     var key = e.getKey();
+                    var name = e.getName() || key;
                     var r = drs[key];
                     if (r) {
-                        renderers[key] = r;
+                        renderers[name] = r;
                     }
                 });
             } else {
@@ -384,12 +391,18 @@ sap.ui.define([
                 options.inclusions = {};
             }
             this.__pivot = div.pivotUI(data, options, true);
+            this.resize();
+        },
 
+        resize: function() {
             var area = jQuery("#" + this.getId()).find(".pvtRendererArea:eq('0')");
             var rW = (area.width() - 100) + "px";
             var rH = this.getRendererAreaHeight();
             if ( rH == null) {
                 rH = (window.innerHeight - area.offset().top - area.position().top) + "px";
+            } else if (rH.startsWith("-")) {
+                var w = parseInt(rH.replace("px", ""), 10);
+                rH = (window.innerHeight - area.offset().top - area.position().top + w) + "px";
             }
             area.css("width", rW);
             area.css("height",  rH);

@@ -18,6 +18,10 @@
                         "id": "SimplePivot",
                         "name": "The simplest",
                         "description": "the simplest pivot"
+                    },{
+                        "id": "SimplePivot2",
+                        "name": "The simple charts",
+                        "description": "custom aggregators"
                     },
                     {
                         "id": "EnhancePivot",
@@ -38,6 +42,11 @@
                         "id": "MyAggregatorPivot",
                         "name": "my aggregator",
                         "description": "my aggregator"
+                    },
+                    {
+                        "id": "CustomAggregatorPivot",
+                        "name": "custom aggregator",
+                        "description": "custom aggregator"
                     }
                 ]
             }

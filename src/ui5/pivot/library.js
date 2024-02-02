@@ -38,6 +38,14 @@ sap.ui.define([
         ],
         elements: [
             "ui5.pivot.Aggregator",
+            "ui5.pivot.CustomAggregator",
+            "ui5.pivot.SumAggregator",
+            "ui5.pivot.AverageAggregator",
+            "ui5.pivot.MedianAggregator",
+            "ui5.pivot.MaxAggregator",
+            "ui5.pivot.MinAggregator",
+            "ui5.pivot.CountAggregator",
+            "ui5.pivot.CountUniqueAggregator",
             "ui5.pivot.Renderer",
             "ui5.pivot.MultiFactor",
             "ui5.pivot.MultiFactorExp"

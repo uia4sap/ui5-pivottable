@@ -1,11 +1,13 @@
 sap.ui.define([
-    "sap/ui/core/Element"
+    'jquery.sap.global',
+    "./BaseAggregator"
 ], function(
-    Element
+    jQuery,
+    BaseAggregator
 ) {
     "use strict";
 
-    return Element.extend("ui5.pivot.Aggregator", {
+    return BaseAggregator.extend("ui5.pivot.Aggregator", {
 
         metadata: {
 
@@ -15,12 +17,21 @@ sap.ui.define([
 
                 key: { type: "string", group: "data" },
 
-                name: { type: "string", group: "data" },
+                plugin: { type: "function", group: "data", defaultValue: undefined }
+            }
+        },
 
-                plugin: { type: "function", group: "data" }
+        build: function(aggregators) {
+            var key = this.getKey();
+            var name = this.getName() || key;
+            var plugin = this.getPlugin();
+            var ag = jQuery.pivotUtilities.aggregators[key];
+            if (ag) {
+                aggregators[name] = ag;
+            } else if (plugin) {
+                aggregators[name] = plugin;
             }
         }
-
     });
 
 }, /* bExport= */ true);

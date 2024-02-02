@@ -241,16 +241,40 @@
                 };
 
                 var table = new ui5.pivot.PivotTable({
-                    layoutId: "simple_pivot_test"
+                    layoutId: "simple_pivot_test",
+                    rendererAreaHeight: "300px",
+                    rendererName: "表格",
+                    aggregatorName: "和",
+                    values: ["qty"],
+                    rows: ["soft"],
+                    cols: ["site"]
                 });
-                table.setRows(["soft"]);
-                table.setCols(["site"]);
                 table.setClickable(true);
                 table.setHeatColorMode("RANGE");
                 table.attachTableClicked(function(oEvent) {
                     var recs = oEvent.getParameter("records");
                     alert(recs);
                 });
+                table.addAggregator(new ui5.pivot.Aggregator({
+                    key: "Count",
+                    name: "次数"
+                }));
+                table.addAggregator(new ui5.pivot.Aggregator({
+                    key: "Sum",
+                    name: "和"
+                }));
+                table.addAggregator(new ui5.pivot.SumAggregator({
+                    name: "qty 和",
+                    attribute: "qty"
+                }));
+                table.addRenderer(new ui5.pivot.Renderer({
+                    key: "Table",
+                    name: "表格"
+                }));
+                table.addRenderer(new ui5.pivot.Renderer({
+                    key: "Heatmap",
+                    name: "热力图"
+                }));
                 table.setRendererOptions({
                     table: {
                         // rowTotals: false

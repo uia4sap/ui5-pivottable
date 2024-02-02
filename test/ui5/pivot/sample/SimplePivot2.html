@@ -236,17 +236,55 @@
                         "qty": 110,
                         "device": "C"
                     }];
+                var sortInfo = {
+                    site: ["S001003", "S001001", "1", "S001002"]
+                };
 
                 var table = new ui5.pivot.PivotTable({
-                    rendererAreaWidth: "500px",
-                    rendererAreaHeight: "-400px"
+                    layoutId: "simple_pivot_test",
+                    rendererAreaHeight: "300px",
+                    aggregatorName: "和",
+                    values: ["qty"],
+                    rows: ["soft"],
+                    cols: ["site"]
                 });
-                table.setRows(["soft", "device"]);
-                table.setCols(["site", "hard"]);
+                table.setClickable(true);
+                table.setHeatColorMode("RANGE");
+                table.attachTableClicked(function(oEvent) {
+                    var recs = oEvent.getParameter("records");
+                    alert(recs);
+                });
+                table.addAggregator(new ui5.pivot.CountAggregator({
+                    name: "次数",
+                }));
+                table.addAggregator(new ui5.pivot.CountUniqueAggregator({
+                    name: "唯一",
+                    attribute: "hard"
+                }));
+                table.addAggregator(new ui5.pivot.SumAggregator({
+                    name: "和",
+                    attribute: "qty"
+                }));
+                table.addAggregator(new ui5.pivot.AverageAggregator({
+                    name: "平均",
+                    attribute: "qty"
+                }));
+                table.addAggregator(new ui5.pivot.MaxAggregator({
+                    name: "最大",
+                    attribute: "qty"
+                }));
+                table.addAggregator(new ui5.pivot.MinAggregator({
+                    name: "最小",
+                    attribute: "qty"
+                }));
+                table.addAggregator(new ui5.pivot.MedianAggregator({
+                    name: "中位数",
+                    attribute: "qty"
+                }));
 
                 var button1 = new sap.m.Button({
                     width: "120px",
-                    text: "Load"
+                    text: "Reload"
                 });
                 button1.attachPress(function() {
                     table.load(data);
@@ -255,8 +293,10 @@
                 var vBox = new sap.m.VBox();
                 vBox.addItem(table);
                 vBox.addItem(button1);
+
                 vBox.placeAt("content");
             });
+
         </script>
     </head>
 

@@ -22,9 +22,7 @@
                 data-sap-ui-theme="sap_belize">
         </script>
         <script>
-            var myAggregator = function(args) {
-                var attr;
-                attr = args[0];
+            var customAggregator1 = function(attr) {
                 return function(data, rowKey, colKey) {
                     return {
                         sum: 0,
@@ -42,7 +40,27 @@
                             return this.flag;
                         },
                         format: $.pivotUtilities.numberFormat(),
-                        numInputs: 1
+                    };
+                };
+            }; 
+            var customAggregator2 = function() {
+                return function(data, rowKey, colKey) {
+                    return {
+                        sum: 0,
+                        flag: true,
+                        push: function(record) {
+                            this.flag = this.flag & record.good;
+                            if (!isNaN(parseFloat(record["cycleTime"]))) {
+                                return this.sum += parseFloat(record["cycleTime"]);
+                            }
+                        },
+                        value: function() {
+                            return this.sum;
+                        },
+                        good: function() {
+                            return this.flag;
+                        },
+                        format: $.pivotUtilities.numberFormat(),
                     };
                 };
             }; 
@@ -52,21 +70,19 @@
                 table.setRows(["device"]);
                 table.setCols(["op"]);
                 // aggregators
-                table.addAggregator(new ui5.pivot.Aggregator({
-                    key: "My",
-                    name: "My",
-                    plugin: myAggregator
+                table.addAggregator(new ui5.pivot.CustomAggregator({
+                    name: "Custom1",
+                    attribute: "cycleTime",
+                    handler: customAggregator1
+                }));
+                table.addAggregator(new ui5.pivot.CustomAggregator({
+                    name: "Custom2",
+                    handler: customAggregator2
                 }));
                 // renderers
                 table.addRenderer(new ui5.pivot.Renderer({
                     key: "Table"
                 }));
-                table.addRenderer(new ui5.pivot.Renderer({
-                    key: "Heatmap"
-                }));
-                table.setRendererOptions({
-                    "heatmapKey": "good"
-                })
 
                 var button1 = new sap.m.Button({
                     icon: "sap-icon://refresh"
