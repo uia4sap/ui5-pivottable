@@ -1055,12 +1055,12 @@
       tableDiv.setAttribute("pivotUIOptions", tableResult.getAttribute("pivotUIOptions"));
       tableDiv.appendChild(tableResult);
       tableDiv["loaded"] = function() {
-        _row = tableResult.rows[colAttrs.length];
+        var _row = tableResult.rows[colAttrs.length];
         var _left = 0;
+        var _table = $(tableResult);
         for(var c = 0; c <= rowAttrs.length; c++) {
-            var clzName = ".axisCol" + c;
-            $(clzName).css("left", _left + "px");
-            _left += _row.cells[c].offsetWidth;
+          $(_table).find("th.axisCol" + c).css("left", _left + "px");
+          _left += _row.cells[c].offsetWidth;
         }
     };
 return tableDiv;

@@ -1170,11 +1170,11 @@
             tableDiv.setAttribute("pivotUIOptions", result.getAttribute("pivotUIOptions"));
             tableDiv.appendChild(result);
             tableDiv["loaded"] = function() {
-                _row = result.rows[colAttrs.length];
+                var _row = result.rows[colAttrs.length];
                 var _left = 0;
+                var _table = $(result);
                 for(var c = 0; c <= rowAttrs.length; c++) {
-                    var clzName = ".axisCol" + c;
-                    $(clzName).css("left", _left + "px");
+                    $(_table).find("th.axisCol" + c).css("left", _left + "px");
                     _left += _row.cells[c].offsetWidth;
                 }
             };

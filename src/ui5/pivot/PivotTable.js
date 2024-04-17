@@ -65,7 +65,9 @@ sap.ui.define([
 
                 layoutId: { type: "string", group: "others" },
 
-                rendererAreaHeight: { type: "string", group: "ui" }
+                rendererAreaHeight: { type: "string", group: "ui" },
+
+                menuLimit: { type: "int", defaultValue: 500 }
             },
 
             aggregations: {
@@ -376,6 +378,7 @@ sap.ui.define([
                     rows: this.getRows(),
                     cols: this.getCols(),
                     vals: this.getValues(),
+                    menuLimit: this.getMenuLimit(),
                     hiddenAttributes: this.getHiddenAttributes(),
                     hiddenFromAggregators: this.getHiddenFromAggregators(),
                     hiddenFromDragDrop: this.getHiddenFromDragDrop(),
@@ -398,14 +401,14 @@ sap.ui.define([
             var area = jQuery("#" + this.getId()).find(".pvtRendererArea:eq('0')");
             var rW = (area.width() - 100) + "px";
             var rH = this.getRendererAreaHeight();
-            if ( rH == null) {
+            if (rH == null) {
                 rH = (window.innerHeight - area.offset().top - area.position().top) + "px";
             } else if (rH.startsWith("-")) {
                 var w = parseInt(rH.replace("px", ""), 10);
                 rH = (window.innerHeight - area.offset().top - area.position().top + w) + "px";
             }
             area.css("width", rW);
-            area.css("height",  rH);
+            area.css("height", rH);
         },
 
         tableToExcel: function() {
